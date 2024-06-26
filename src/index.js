@@ -15,5 +15,5 @@ app.use('/api/test', testRouter)
 
 app.listen(PORT, async () => {
   await connection()
-  console.log("Server listening on PORT " + PORT)
+  console.log("Server listening on PORT ❤️: " + PORT);
 })
