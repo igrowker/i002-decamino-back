@@ -1,11 +1,19 @@
 import express from 'express'
+import cors from 'cors'
+import 'dotenv/config'
+import connection from './config/db.connection.js'
+import testRouter from './routes/test.route.js'
 
 const app = express()
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors())
 
-app.listen(PORT, () => {
+app.use('/api/test', testRouter)
+
+app.listen(PORT, async () => {
+  await connection()
   console.log("Server listening on PORT " + PORT)
 })
