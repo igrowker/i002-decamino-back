@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import args from './args.js'
 
 dotenv.config({
-  path: args.mode === 'prod' ? './.env' : './.env.dev',
+  path: args.mode === 'dev' ? './.env' : './.env.dev',
 })
 
 export default {
