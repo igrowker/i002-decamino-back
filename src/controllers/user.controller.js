@@ -1,7 +1,6 @@
-import User from '../models/User.js';
-import bcrypt from 'bcrypt';
 import Joi from 'joi';
 import { generateToken } from '../utils/jwt.js';
+import * as userServices from '../services/user.service.js'
 
 const userSchema = Joi.object({
   username: Joi.string().required().messages({
@@ -26,15 +25,15 @@ const userSchema = Joi.object({
 export const POSTUserRegister = async (req, res) => {
   const data = req.body;
   const { error, value } = userSchema.validate(data);
+
   if (error) {
     return res.status(400).json({
       error: error.details[0].message
     });
   }
+
   try {
-    const salt = await bcrypt.genSalt(10)
-    data.password = await bcrypt.hash(data.password, salt)
-    const response = await User.create(data);
+    const response = await userServices.registerUser(data);
     return res.status(201).json(response);
 
   } catch (error) {
@@ -46,20 +45,8 @@ export const POSTUserLogin = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username })
 
-    if (!user) {
-      return res.status(400).json({ message: 'Usuario no encontrado' });
-    }
-
-    console.log(password)
-    console.log(user.password)
-
-    const isMatch = await bcrypt.compare(password, user.password)
-
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Contraseña incorrecta' });
-    }
+    const user = userServices.loginUser(username, password)
 
     const token = generateToken({
       id: user._id,
