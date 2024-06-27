@@ -16,5 +16,5 @@ app.use('/api/users', userRoutes);
 
 app.listen(PORT, async () => {
   await connection()
-  console.log("Server listening on PORT ❤️🔥🔥: " + PORT);
+  console.log("Server listening on PORT ❤️ 🔥🔥: " + PORT);
 })
