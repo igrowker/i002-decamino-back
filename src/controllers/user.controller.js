@@ -46,7 +46,7 @@ export const POSTUserLogin = async (req, res) => {
 
   try {
 
-    const user = userServices.loginUser(username, password)
+    const user = await userServices.loginUser(username, password)
 
     const token = generateToken({
       id: user._id,
@@ -59,6 +59,19 @@ export const POSTUserLogin = async (req, res) => {
     return res.status(200).json({ token })
 
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export const POST2faSetup = async (req, res) => {
+  const { id } = req.body
+
+  try {
+    const response = await userServices.create2fa(id)
+    console.log(response)
+    return res.status(200).json(response);
+  }
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
