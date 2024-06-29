@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { generateToken } from '../utils/jwt.js';
 import * as userServices from '../services/user.service.js'
+import CustomError from '../utils/custom.error.js';
 
 const userSchema = Joi.object({
   username: Joi.string().required().messages({
@@ -22,12 +23,12 @@ const userSchema = Joi.object({
   })
 });
 
-export const POSTUserRegister = async (req, res) => {
+export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
   const { error, value } = userSchema.validate(data);
 
   if (error) {
-    return res.status(400).json({
+    res.status(400).json({
       error: error.details[0].message
     });
   }
@@ -37,11 +38,11 @@ export const POSTUserRegister = async (req, res) => {
     return res.status(201).json(response);
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 }
 
-export const POSTUserLogin = async (req, res) => {
+export const POSTUserLogin = async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
@@ -59,7 +60,7 @@ export const POSTUserLogin = async (req, res) => {
     return res.status(200).json({ token })
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 }
 
@@ -80,6 +81,6 @@ export const GETUser = async (req, res) => {
     return res.status(200).json({ user: req.user });
   }
   catch (error) {
-    return res.json({ error: error.message });
+    next(error)
   }
 }

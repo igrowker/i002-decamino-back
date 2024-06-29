@@ -4,8 +4,6 @@ import User from '../models/User.js'
 export const injectUser = async (req, res, next) => {
   const token = req.header('Authorization')?.split(' ')[1];
 
-  console.log(token)
-
   if (!token) {
     req.user = null;
     return next();

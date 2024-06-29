@@ -1,6 +1,8 @@
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
 import User from '../models/User.js';
+import CustomError from '../utils/custom.error.js';
+import dictionary from '../utils/error.dictionary.js'
 
 export const registerUser = async (data) => {
   try {
@@ -9,7 +11,7 @@ export const registerUser = async (data) => {
     return response
   }
   catch (error) {
-    throw new Error('Error al registrar usuario: ' + error.message)
+    throw (error)
   }
 }
 
@@ -18,17 +20,17 @@ export const loginUser = async (username, password, otpToken) => {
     const user = await User.findOne({ username })
 
     if (!user) {
-      throw new Error('Usuario no encontrado')
+      return CustomError.new(dictionary.userNotFound)
     }
 
     const isMatch = await user.comparePassword(password, user.password)
 
     if (!isMatch) {
-      throw new Error('Contraseña incorrecta')
+      return CustomError.new(dictionary.userOrPassword)
     }
 
     if (user.twoFactorEnabled) {
-      if (!otpToken) throw new Error('Este usuario requiere código TOTP');
+      if (!otpToken) return CustomError.new(dictionary.requiresTOTP)
 
       const verified = speakeasy.totp.verify({
         secret: user.twoFactorSecret,
@@ -37,13 +39,13 @@ export const loginUser = async (username, password, otpToken) => {
         window: 1
       });
 
-      if (!verified) throw new Error('Código TOTP inválido');
+      if (!verified) return CustomError.new(dictionary.invalidTOTP)
     }
 
     return user
   }
   catch (error) {
-    throw new Error('Error al iniciar sesión: ' + error.message)
+    throw error
   }
 }
 
@@ -52,7 +54,7 @@ export const create2fa = async (id) => {
     const user = await User.findById(id);
 
     if (!user) {
-      throw new Error('Usuario no encontrado')
+      return CustomError.new(dictionary.userNotFound)
     }
 
     const secret = speakeasy.generateSecret({ length: 20 });
@@ -71,6 +73,6 @@ export const create2fa = async (id) => {
     return { userId: user._id, secret: secret.base32, qrCode: data_url };
   }
   catch (error) {
-    throw new Error('Error al generar secreto 2FA: ' + error.message)
+    throw (error)
   }
 }
