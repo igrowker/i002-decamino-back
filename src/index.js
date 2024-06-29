@@ -8,7 +8,7 @@ import { setupSwagger } from './config/swagger.js';
 
 const app = express()
 const PORT = process.env.PORT || 8080
-// Llama a la configuración de Swagger
+
 setupSwagger(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
