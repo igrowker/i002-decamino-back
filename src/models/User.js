@@ -16,6 +16,13 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  twoFactorSecret: {
+    type: String,
+  },
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false,
+  },
   favorites: [{
     type: Schema.Types.ObjectId,
     ref: 'restaurant'
