@@ -1,41 +1,18 @@
-import Joi from 'joi';
-import { generateToken } from '../utils/jwt.js';
 import * as userServices from '../services/user.service.js'
+import { generateToken } from '../utils/jwt.js';
+import { userSchema } from '../schemas/user.schema.js'
 import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
 
-const userSchema = Joi.object({
-  username: Joi.string().required().messages({
-    'string.empty': 'El nombre de usuario es requerido',
-    'any.required': 'El nombre de usuario es requerido'
-  }),
-  email: Joi.string().email().required().messages({
-    'string.email': 'Debe proporcionar un correo electrónico válido',
-    'string.empty': 'El correo electrónico es requerido',
-    'any.required': 'El correo electrónico es requerido'
-  }),
-  password: Joi.string().min(8).required().messages({
-    'string.min': 'La contraseña debe tener al menos {#limit} caracteres',
-    'string.empty': 'La contraseña es requerida',
-    'any.required': 'La contraseña es requerida'
-  }),
-  role: Joi.string().valid('user', 'admin').default('user').messages({
-    'any.only': 'El rol debe ser uno de los siguientes valores: user, admin'
-  })
-});
-
 export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
-  const { error, value } = userSchema.validate(data);
-
-  if (error) {
-    res.status(400).json({
-      error: error.details[0].message
-    });
-  }
-
   try {
-    const response = await userServices.registerUser(data);
+    const { error, value } = userSchema.validate(data);
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await userServices.registerUser(value);
+
     return res.status(201).json(response);
 
   } catch (error) {
@@ -73,7 +50,7 @@ export const POST2faSetup = async (req, res) => {
     return res.status(200).json(response);
   }
   catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error)
   }
 }
 
