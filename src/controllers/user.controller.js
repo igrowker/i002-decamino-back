@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { generateToken } from '../utils/jwt.js';
 import * as userServices from '../services/user.service.js'
+import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
 
 const userSchema = Joi.object({
@@ -65,7 +66,7 @@ export const POSTUserLogin = async (req, res, next) => {
 }
 
 export const POST2faSetup = async (req, res) => {
-  const { id } = req.body
+  const { id } = req.user
 
   try {
     const response = await userServices.create2fa(id)
@@ -78,7 +79,21 @@ export const POST2faSetup = async (req, res) => {
 
 export const GETUser = async (req, res) => {
   try {
-    return res.status(200).json({ user: req.user });
+    const { id } = req.user
+    const user = await userServices.readUser(id)
+    return res.status(200).json({ response: new UserDto(user) });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const PUTUser = async (req, res, next) => {
+  try {
+    const { id } = req.user
+    const data = req.body
+    const response = await userServices.updateUser(id, data)
+    return res.status(200).json({ response: new UserDto(response) });
   }
   catch (error) {
     next(error)

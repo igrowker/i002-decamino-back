@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as userController from '../controllers/user.controller.js';
 import User from "../models/User.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
+import { requireAuth, validateUser } from "../middlewares/auth.middleware.js";
 
 
 const router = Router();
@@ -51,8 +51,8 @@ const router = Router();
  */
 router.post('/register', userController.POSTUserRegister)
 router.post('/login', userController.POSTUserLogin)
-.post('/2fa/setup', userController.POST2faSetup)
-
+.post('/2fa/setup', requireAuth, userController.POST2faSetup)
 .get('/profile', requireAuth, userController.GETUser)
+.put('/profile', requireAuth, userController.PUTUser)
 
 export default router;
