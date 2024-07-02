@@ -4,7 +4,7 @@ import connection from './config/db.connection.js';
 import { injectUser } from './middlewares/auth.middleware.js';
 import testRouter from './routes/test.route.js';
 import userRoutes from './routes/user.route.js';
-import { setupSwagger } from './config/swagger.js'; 
+import { setupSwagger } from './config/swagger.js';
 
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
@@ -19,7 +19,7 @@ app.use(cors())
 
 app.use(injectUser)
 
-app.use('/', (req, res) => res.status(200).json('¡Bienvenido a DeCamino!'))
+app.use('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
 app.use('/api/test', testRouter);
 app.use('/api/user', userRoutes);
 
