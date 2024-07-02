@@ -6,7 +6,7 @@ import dictionary from '../utils/error.dictionary.js'
 
 export const registerUser = async (data) => {
   try {
-    const response = User.create(data)
+    const response = await User.create(data)
 
     return response
   }
