@@ -76,3 +76,35 @@ export const create2fa = async (id) => {
     throw (error)
   }
 }
+
+export const readUser = async (id) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    return user
+  }
+  catch (error) {
+    throw (error)
+  }
+}
+
+export const updateUser = async (id, data) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
+
+    return updatedUser
+  }
+  catch (error) {
+    throw (error)
+  }
+}
