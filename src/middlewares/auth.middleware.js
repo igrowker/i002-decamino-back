@@ -1,5 +1,5 @@
 import { verifyToken } from '../utils/jwt.js'
-import User from '../models/User.js'
+import User from '../models/user.model.js'
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js'
 
