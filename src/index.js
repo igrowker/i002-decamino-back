@@ -19,9 +19,9 @@ app.use(cors())
 
 app.use(injectUser)
 
+app.use('/', (req, res) => res.status(200).json('¡Bienvenido a DeCamino!'))
 app.use('/api/test', testRouter);
 app.use('/api/user', userRoutes);
-
 
 app.use(errorHandler);
 app.use(notFoundHandler);
