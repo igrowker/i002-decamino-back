@@ -31,7 +31,7 @@ export const injectUser = async (req, res, next) => {
 export const requireAuth = (req, res, next) => {
   try {
     if (!req.user) {
-      return new CustomError.new(dictionary.authentication)
+      return CustomError.new(dictionary.authentication)
     }
     next();
   }
@@ -45,7 +45,7 @@ export const validateUser = (req, res, next) => {
     const { id } = req.params;
 
     if (!req.user || req.user.id !== id) {
-      return new CustomError.new(dictionary.authorization)
+      return CustomError.new(dictionary.authorization)
     }
 
     next();
