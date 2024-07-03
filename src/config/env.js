@@ -8,5 +8,6 @@ dotenv.config({
 export default {
   MONGO_URI: process.env.MONGO_URI,
   JWT_SECRET: process.env.JWT_SECRET,
-  BASE_URL: process.env.BASE_URL
+  BASE_URL: process.env.BASE_URL,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
 }
