@@ -1,6 +1,5 @@
 import { Router } from "express";
 import * as userController from '../controllers/user.controller.js';
-import User from "../models/User.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 
 

@@ -15,7 +15,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) =>
       console.log(event.type)
       console.log(event.data.object)
     } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      console.log(`⚠️ Error en la verificación de la firma del webhook.`, err.message);
       return res.sendStatus(400);
     }
   
@@ -24,7 +24,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) =>
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-        // Then define and call a method to handle the successful payment intent.
+        // Define y llama a un método para manejar la intención de pago exitosa..
         // handlePaymentIntentSucceeded(paymentIntent);
         break;
       // ... handle other event types
