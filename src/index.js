@@ -14,8 +14,8 @@ const app = express()
 const PORT = process.env.PORT || 8080
 
 setupSwagger(app);
-// Ruta de webhook antes de body-parser
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
+// Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoute);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
