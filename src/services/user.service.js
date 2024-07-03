@@ -11,7 +11,7 @@ export const registerUser = async (data) => {
     return response
   }
   catch (error) {
-    throw (error)
+    throw error
   }
 }
 
@@ -73,7 +73,7 @@ export const create2fa = async (id) => {
     return { userId: user._id, secret: secret.base32, qrCode: data_url };
   }
   catch (error) {
-    throw (error)
+    throw error
   }
 }
 
@@ -105,6 +105,6 @@ export const updateUser = async (id, data) => {
     return updatedUser
   }
   catch (error) {
-    throw (error)
+    throw error
   }
 }
