@@ -28,7 +28,7 @@ export const GETReservations = async (req, res) => {
 };
 
 // Obtener una reserva por ID
-export const getReservationById = async (req, res) => {
+export const GETReservationById = async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (!reservation) {
@@ -41,7 +41,7 @@ export const getReservationById = async (req, res) => {
 };
 
 // Actualizar una reserva
-exports.updateReservation = async (req, res) => {
+export const updatedReservationReservation = async (req, res) => {
   try {
     const { user, restaurant, date, status } = req.body;
     const updatedReservation = await Reservation.findByIdAndUpdate(
@@ -59,7 +59,7 @@ exports.updateReservation = async (req, res) => {
 };
 
 // Eliminar una reserva
-exports.deleteReservation = async (req, res) => {
+export const DELETEReservation = async (req, res) => {
   try {
     const deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
     if (!deletedReservation) {
