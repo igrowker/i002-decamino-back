@@ -1,3 +1,5 @@
+// EN LAS RUTAS SE ASIGNA UN CONTROLLER A CADA PETICIÓN HTTP DE ACUERDO AL MÉTODO UTLIZADO Y A LOS PARAMS QUE TENGA
+
 import { Router } from 'express'
 import * as testController from '../controllers/test.controller.js'
 

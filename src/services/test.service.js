@@ -1,3 +1,5 @@
+// EN LOS SERVICES SE UTILIZAN LOS DATOS PROPORCIONADOS POR EL CONTROLLER PARA HACER LLAMADAS A LA BASE DE DATOS (en este caso con el modelo Test) O PARA REALIZAR OTRAS ACCIONES CON LIBRERÍAS EXTERNAS (mandar mails, buscar localizaciones, etc)
+
 import Test from '../models/test.model.js';
 
 // Declaración del service que trae toda la colección 'test', no recibe ningún parámetro

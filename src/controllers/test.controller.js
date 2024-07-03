@@ -1,3 +1,5 @@
+// EN LOS CONTROLLERS SE OBTIENEN LOS DATOS DE LA PETICION (req.params, req.body, etc) Y SE LOS UTILIZA PARA LLAMAR AL SERVICIO. LUEGO SE DEVUELVE LA RESPUESTA CON SU STATUS Y LOS DATOS OBTENIDOS. EN CASO DE HABER ERROR, SE MANEJA CON next(error)
+
 import * as testServices from '../services/test.service.js'
 
 // Declaración del controller que trae toda la colección 'test'
