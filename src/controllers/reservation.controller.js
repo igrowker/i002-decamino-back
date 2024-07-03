@@ -2,13 +2,13 @@
 
 // /controllers/reservationController.js
 
-import Reservation from '../models/reservation'; 
+import * as reservationServices from '../services/reservation.service.js'
 
 // Crear una nueva reserva 
-exports.createReservation = async (req, res) => {
+export const POSTReservation = async (req, res) => {
   try {
     const { user, restaurant, date, status } = req.body; // controller uso info de peticion 
-    const newReservation =  await Reservation.create({user, restaurant, date, status}) // llamo a b.datos crea va a servicios
+    const newReservation =  await reservationServices.createReservation({user, restaurant, date, status}) // llamo a b.datos crea va a servicios
    
     // todo req es controladores
     res.status(201).json(newReservation); //json nombre  llave = valor
@@ -18,7 +18,7 @@ exports.createReservation = async (req, res) => {
 };
 
 // Obtener todas las reservas
-exports.getReservations = async (req, res) => {
+export const GETReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find();
     res.status(200).json(reservations);
@@ -28,7 +28,7 @@ exports.getReservations = async (req, res) => {
 };
 
 // Obtener una reserva por ID
-exports.getReservationById = async (req, res) => {
+export const getReservationById = async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (!reservation) {
