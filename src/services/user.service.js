@@ -1,17 +1,17 @@
 import speakeasy from 'speakeasy'
 import qrcode from 'qrcode'
-import User from '../models/User.js';
+import User from '../models/user.model.js';
 import CustomError from '../utils/custom.error.js';
 import dictionary from '../utils/error.dictionary.js'
 
 export const registerUser = async (data) => {
   try {
-    const response = User.create(data)
+    const response = await User.create(data)
 
     return response
   }
   catch (error) {
-    throw (error)
+    throw error
   }
 }
 
@@ -73,6 +73,38 @@ export const create2fa = async (id) => {
     return { userId: user._id, secret: secret.base32, qrCode: data_url };
   }
   catch (error) {
+    throw error
+  }
+}
+
+export const readUser = async (id) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    return user
+  }
+  catch (error) {
     throw (error)
+  }
+}
+
+export const updateUser = async (id, data) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
+
+    return updatedUser
+  }
+  catch (error) {
+    throw error
   }
 }

@@ -4,7 +4,7 @@ const dictionary = {
     message: "Usuario o contraseña incorrecta"
   },
   userNotFound: {
-    status: 400,
+    status: 404,
     message: "El usuario no existe"
   },
   requiresTOTP: {
@@ -17,11 +17,11 @@ const dictionary = {
   },
   authentication: {
     status: 401,
-    message: "Invalid credentials"
+    message: "No autenticado"
   },
   authorization: {
     status: 403,
-    message: "Not allowed"
+    message: "No autorizado"
   }
 }
 

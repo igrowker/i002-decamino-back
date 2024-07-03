@@ -3,6 +3,7 @@ import * as userController from '../controllers/user.controller.js';
 import { requireAuth } from "../middlewares/auth.middleware.js";
 
 
+
 const router = Router();
 /**
  * @swagger
@@ -49,9 +50,9 @@ const router = Router();
  *                 error: "E11000 duplicate key error collection: test.users index: username_1 dup key: { username: \"sasassalkasqwqaslk\" }"
  */
 router.post('/register', userController.POSTUserRegister)
-router.post('/login', userController.POSTUserLogin)
-.post('/2fa/setup', userController.POST2faSetup)
-
+.post('/login', userController.POSTUserLogin)
+.post('/2fa/setup', requireAuth, userController.POST2faSetup)
 .get('/profile', requireAuth, userController.GETUser)
+.put('/profile', requireAuth, userController.PUTUser)
 
 export default router;
