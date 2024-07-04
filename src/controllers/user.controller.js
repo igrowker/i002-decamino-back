@@ -21,11 +21,11 @@ export const POSTUserRegister = async (req, res, next) => {
 }
 
 export const POSTUserLogin = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
 
-    const user = await userServices.loginUser(username, password)
+    const user = await userServices.loginUser(email, password)
 
     const token = generateToken({
       id: user._id,
