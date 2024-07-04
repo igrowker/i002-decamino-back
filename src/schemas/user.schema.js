@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const userSchema = Joi.object({
+export const registerSchema = Joi.object({
   username: Joi.string().required().messages({
     'string.empty': 'El nombre de usuario es requerido',
     'any.required': 'El nombre de usuario es requerido'

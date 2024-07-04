@@ -1,17 +1,15 @@
 import * as userServices from '../services/user.service.js'
 import { generateToken } from '../utils/jwt.js';
-import { userSchema } from '../schemas/user.schema.js'
+import { registerSchema } from '../schemas/user.schema.js'
 import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
-import cloudinary from '../config/cloudinary.js'
 import fs from 'fs'
-import User from '../models/user.model.js';
 import dictionary from '../utils/error.dictionary.js';
 
 export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
   try {
-    const { error, value } = userSchema.validate(data);
+    const { error, value } = registerSchema.validate(data);
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
@@ -97,8 +95,8 @@ export const GETUser = async (req, res) => {
 export const PUTUser = async (req, res, next) => {
   try {
     const { id } = req.user
-    const data = req.body
-    const response = await userServices.updateUser(id, data)
+    const { username, role } = req.body
+    const response = await userServices.updateUser(id, { username, role })
     return res.status(200).json({ response: new UserDto(response) });
   }
   catch (error) {
