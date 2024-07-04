@@ -3,6 +3,10 @@ import { generateToken } from '../utils/jwt.js';
 import { userSchema } from '../schemas/user.schema.js'
 import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
+import cloudinary from '../config/cloudinary.js'
+import fs from 'fs'
+import User from '../models/user.model.js';
+import dictionary from '../utils/error.dictionary.js';
 
 export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
@@ -27,13 +31,9 @@ export const POSTUserLogin = async (req, res, next) => {
 
     const user = await userServices.loginUser(email, password)
 
-    const token = generateToken({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      favorites: user.favorites,
-      role: user.role
-    })
+    const userData = new UserDto(user);
+
+    const token = generateToken({ ...userData })
 
     return res.status(200).json({ token })
 
@@ -48,6 +48,35 @@ export const POST2faSetup = async (req, res) => {
   try {
     const response = await userServices.create2fa(id)
     return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const POSTProfileImg = async (req, res, next) => {
+  const { id } = req.user
+
+  try {
+    if (!req.file) {
+      return CustomError.new(dictionary.missingFile)
+    }
+
+    const result = await userServices.uploadProfileImg(id, req.file)
+
+    const updatedUser = await userServices.updateUser(id, { profileImg: result.secure_url })
+
+    const updatedUserData = new UserDto(updatedUser);
+
+    const token = generateToken({ ...updatedUserData })
+
+    fs.unlinkSync(req.file.path);  // Eliminación de la imagen en local
+
+    res.status(200).json({
+      message: 'Image uploaded successfully',
+      imageUrl: result.secure_url,
+      token
+    });
   }
   catch (error) {
     next(error)

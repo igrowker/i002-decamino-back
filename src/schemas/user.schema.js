@@ -15,7 +15,7 @@ export const userSchema = Joi.object({
     'string.empty': 'La contraseña es requerida',
     'any.required': 'La contraseña es requerida'
   }),
-  role: Joi.string().valid('user', 'admin').default('user').messages({
-    'any.only': 'El rol debe ser uno de los siguientes valores: user, admin'
+  role: Joi.string().valid('merchant', 'traveler').messages({
+    'any.only': 'El rol debe ser uno de los siguientes valores: merchant, traveler'
   })
 });
