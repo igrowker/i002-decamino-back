@@ -3,6 +3,10 @@ const dictionary = {
     status: 400,
     message: "No se ha subido ningún archivo"
   },
+  emailExists: {
+    status: 400,
+    message: "Correo electrónico ya registrado"
+  },
   userOrPassword: {
     status: 400,
     message: "Usuario o contraseña incorrecta"

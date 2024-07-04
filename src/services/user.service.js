@@ -7,6 +7,11 @@ import cloudinary from '../config/cloudinary.js';
 
 export const registerUser = async (data) => {
   try {
+
+    const user = await User.findOne({ email: data.email })
+
+    if (user) return CustomError.new(dictionary.emailExists)
+
     const response = await User.create(data)
 
     return response

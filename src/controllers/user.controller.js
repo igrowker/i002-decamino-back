@@ -1,6 +1,6 @@
 import * as userServices from '../services/user.service.js'
 import { generateToken } from '../utils/jwt.js';
-import { registerSchema } from '../schemas/user.schema.js'
+import { registerSchema, loginSchema, updateSchema } from '../schemas/user.schema.js'
 import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
 import fs from 'fs'
@@ -26,6 +26,9 @@ export const POSTUserLogin = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
+    const { error } = loginSchema.validate({ email, password });
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
     const user = await userServices.loginUser(email, password)
 
@@ -82,8 +85,8 @@ export const POSTProfileImg = async (req, res, next) => {
 }
 
 export const GETUser = async (req, res) => {
+  const { id } = req.user
   try {
-    const { id } = req.user
     const user = await userServices.readUser(id)
     return res.status(200).json({ response: new UserDto(user) });
   }
@@ -93,10 +96,15 @@ export const GETUser = async (req, res) => {
 }
 
 export const PUTUser = async (req, res, next) => {
+  const { id } = req.user
+  const { username, email, role } = req.body
   try {
-    const { id } = req.user
-    const { username, email, role } = req.body
+    const { error } = updateSchema.validate({ username, email, role });
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
     const response = await userServices.updateUser(id, { username, email, role })
+
     return res.status(200).json({ response: new UserDto(response) });
   }
   catch (error) {
