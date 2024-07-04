@@ -95,8 +95,8 @@ export const GETUser = async (req, res) => {
 export const PUTUser = async (req, res, next) => {
   try {
     const { id } = req.user
-    const { username, role } = req.body
-    const response = await userServices.updateUser(id, { username, role })
+    const { username, email, role } = req.body
+    const response = await userServices.updateUser(id, { username, email, role })
     return res.status(200).json({ response: new UserDto(response) });
   }
   catch (error) {
