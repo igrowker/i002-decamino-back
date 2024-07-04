@@ -3,6 +3,9 @@ import { generateToken } from '../utils/jwt.js';
 import { userSchema } from '../schemas/user.schema.js'
 import UserDto from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
+import cloudinary from '../config/cloudinary.js'
+import fs from 'fs'
+import User from '../models/user.model.js';
 
 export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
@@ -27,13 +30,9 @@ export const POSTUserLogin = async (req, res, next) => {
 
     const user = await userServices.loginUser(email, password)
 
-    const token = generateToken({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      favorites: user.favorites,
-      role: user.role
-    })
+    const userData = new UserDto(user);
+
+    const token = generateToken({ ...userData })
 
     return res.status(200).json({ token })
 
@@ -48,6 +47,37 @@ export const POST2faSetup = async (req, res) => {
   try {
     const response = await userServices.create2fa(id)
     return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const POSTProfileImg = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file jeje' });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      public_id: "profile-img/" + req.user.id,
+      folder: req.user.id, // Especifica una carpeta en Cloudinary
+      format: 'webp'
+    });
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, { profileImg: result.secure_url }, { new: true })
+
+    const updatedUserData = new UserDto(updatedUser);
+
+    const token = generateToken({ ...updatedUserData })
+
+    fs.unlinkSync(req.file.path);  // Eliminación de la imagen en local
+
+    res.status(200).json({
+      message: 'Image uploaded successfully',
+      imageUrl: result.secure_url,
+      token
+    });
   }
   catch (error) {
     next(error)

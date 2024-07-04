@@ -1,8 +1,7 @@
 import { Router } from "express";
 import * as userController from '../controllers/user.controller.js';
 import { requireAuth } from "../middlewares/auth.middleware.js";
-
-
+import upload from "../config/multer.js";
 
 const router = Router();
 /**
@@ -50,9 +49,10 @@ const router = Router();
  *                 error: "E11000 duplicate key error collection: test.users index: username_1 dup key: { username: \"sasassalkasqwqaslk\" }"
  */
 router.post('/register', userController.POSTUserRegister)
-.post('/login', userController.POSTUserLogin)
-.post('/2fa/setup', requireAuth, userController.POST2faSetup)
-.get('/profile', requireAuth, userController.GETUser)
-.put('/profile', requireAuth, userController.PUTUser)
+  .post('/login', userController.POSTUserLogin)
+  .post('/2fa/setup', requireAuth, userController.POST2faSetup)
+  .post('/profile-img/upload', requireAuth, upload.single('profileImg'), userController.POSTProfileImg)
+  .get('/profile', requireAuth, userController.GETUser)
+  .put('/profile', requireAuth, userController.PUTUser)
 
 export default router;
