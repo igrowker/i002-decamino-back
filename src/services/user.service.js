@@ -3,6 +3,7 @@ import qrcode from 'qrcode'
 import User from '../models/user.model.js';
 import CustomError from '../utils/custom.error.js';
 import dictionary from '../utils/error.dictionary.js'
+import cloudinary from '../config/cloudinary.js';
 
 export const registerUser = async (data) => {
   try {
@@ -71,6 +72,25 @@ export const create2fa = async (id) => {
     const data_url = await qrcode.toDataURL(otpauth_url);
 
     return { userId: user._id, secret: secret.base32, qrCode: data_url };
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const uploadProfileImg = async (id, file) => {
+  try {
+    const result = await cloudinary.uploader.upload(file.path, {
+      public_id: "profile-img/" + id,  // Nombre que tendrá el archivo
+      folder: id, // Carpeta donde se guardará el archivo
+      format: 'webp',
+      transformation: [
+        { width: 500, height: 500, crop: "fill" }, // Redimensionar y hacer cuadrada
+        { fetch_format: "auto", quality: "auto" }  // Optimizar la imagen
+      ]
+    });
+
+    return result
   }
   catch (error) {
     throw error

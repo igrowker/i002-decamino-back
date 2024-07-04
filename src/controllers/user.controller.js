@@ -6,6 +6,7 @@ import CustomError from '../utils/custom.error.js';
 import cloudinary from '../config/cloudinary.js'
 import fs from 'fs'
 import User from '../models/user.model.js';
+import dictionary from '../utils/error.dictionary.js';
 
 export const POSTUserRegister = async (req, res, next) => {
   const data = req.body;
@@ -54,18 +55,16 @@ export const POST2faSetup = async (req, res) => {
 }
 
 export const POSTProfileImg = async (req, res, next) => {
+  const { id } = req.user
+
   try {
     if (!req.file) {
-      return res.status(400).json({ message: 'No file jeje' });
+      return CustomError.new(dictionary.missingFile)
     }
 
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      public_id: "profile-img/" + req.user.id,
-      folder: req.user.id, // Especifica una carpeta en Cloudinary
-      format: 'webp'
-    });
+    const result = await userServices.uploadProfileImg(id, req.file)
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, { profileImg: result.secure_url }, { new: true })
+    const updatedUser = await userServices.updateUser(id, { profileImg: result.secure_url })
 
     const updatedUserData = new UserDto(updatedUser);
 

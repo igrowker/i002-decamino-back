@@ -1,4 +1,8 @@
 const dictionary = {
+  missingFile: {
+    status: 400,
+    message: "No se ha subido ningún archivo"
+  },
   userOrPassword: {
     status: 400,
     message: "Usuario o contraseña incorrecta"
