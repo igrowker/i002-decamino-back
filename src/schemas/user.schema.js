@@ -45,4 +45,6 @@ export const updateSchema = Joi.object({
   role: Joi.string().valid('merchant', 'traveler').optional().messages({
     'any.only': 'El rol debe ser uno de los siguientes valores: merchant, traveler'
   })
+}).min(1).messages({
+  'object.min': 'Debe haber al menos un campo para actualizar'
 })
