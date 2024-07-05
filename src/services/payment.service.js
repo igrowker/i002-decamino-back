@@ -39,8 +39,8 @@ export const createCheckoutSession = async ({ reservationId, description, priceP
             }],
             mode: 'payment',
             //URL de respuestas => tarea del front
-            success_url: 'https://tu-sitio.com/success',
-            cancel_url: 'https://tu-sitio.com/cancel',
+            success_url:'http://localhost:5173/success',
+            cancel_url:'http://localhost:5173/cancel',
         });
 
         // Guardar el pago en la base de datos
@@ -95,7 +95,7 @@ export const handleCheckoutSessionCompleted = async (session) => {
         // Actualiza la reserva si es necesario
         // await Reservation.findByIdAndUpdate(payment.reservation, { status: 'confirmed' });
 
-        console.log(`Payment for reservation ${payment.reservation} was successful!`);
+        //console.log(`Payment for reservation ${payment.reservation} was successful!`);
     } catch (error) {
         console.error(`Error handling session completion: ${error.message}`);
     }
