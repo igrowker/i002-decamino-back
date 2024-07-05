@@ -43,7 +43,7 @@ export const POSTUserLogin = async (req, res, next) => {
   }
 }
 
-export const POST2faSetup = async (req, res) => {
+export const POST2faSetup = async (req, res, next) => {
   const { id } = req.user
 
   try {
@@ -84,7 +84,7 @@ export const POSTProfileImg = async (req, res, next) => {
   }
 }
 
-export const GETUser = async (req, res) => {
+export const GETUser = async (req, res, next) => {
   const { id } = req.user
   try {
     const user = await userServices.readUser(id)

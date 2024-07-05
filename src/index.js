@@ -3,14 +3,14 @@ import cors from 'cors';
 import connection from './config/db.connection.js';
 import { injectUser } from './middlewares/auth.middleware.js';
 import { setupSwagger } from './config/swagger.js'; 
-import testRouter from './routes/test.route.js';
-import userRoutes from './routes/user.route.js';
-import paymentRoute from './routes/payment.route.js';
-import restaurantRoute from './routes/restaurant.route.js';
+import testRoutes from './routes/test.routes.js';
+import userRoutes from './routes/user.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import restaurantRoutes from './routes/restaurant.routes.js';
+import osmRoutes from './routes/osm.routes.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
-import paymentRoute from './routes/payment.route.js';
-import osmRoutes from './routes/osmRoutes.js';
+
 
 // Declaración de la variable app para usar express
 const app = express()
@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 8080
 setupSwagger(app);
 
 // Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoute);
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoutes);
 
 // Se agregan estos dos métodos para que express pueda leer formularios y json
 app.use(express.urlencoded({ extended: true }))
@@ -38,12 +38,13 @@ app.use(injectUser)
 app.get('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
 
 // Declaración de endpoints llamando a routes
-app.use('/api/test', testRouter);
+app.use('/api/test', testRoutes);
 app.use('/api/user', userRoutes);
-app.use('/api/payment', paymentRoute);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/restaurants', restaurantRoutes);
 // Usar las rutas de OSM
 app.use('/api', osmRoutes);
-app.use('/api/restaurants', restaurantRoute);
+
 
 // Manejador de errores
 app.use(errorHandler);
