@@ -8,7 +8,7 @@ import { setupSwagger } from './config/swagger.js';
 
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
-
+import reviewRoutes from './routes/review.route.js';
 const app = express()
 const PORT = process.env.PORT || 8080
 
@@ -19,9 +19,13 @@ app.use(cors())
 
 app.use(injectUser)
 
-app.use('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
+app.get('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
 app.use('/api/test', testRouter);
 app.use('/api/user', userRoutes);
+app.use('/api/review',reviewRoutes);
+
+
+
 
 app.use(errorHandler);
 app.use(notFoundHandler);
