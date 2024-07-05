@@ -2,8 +2,8 @@ import Joi from 'joi';
 
 export const createSchema = Joi.object({
   title: Joi.string().required().messages({
-    'string.empty': 'El nombre del restaurante es requerido',
-    'any.required': 'El nombre del restaurante es requerido'
+    'string.empty': 'El título del restaurante es requerido',
+    'any.required': 'El título del restaurante es requerido'
   }),
   location: Joi.object({
     lat: Joi.number().required().messages({
@@ -48,7 +48,7 @@ export const createSchema = Joi.object({
 
 export const updateSchema = Joi.object({
   title: Joi.string().messages({
-    'string.empty': 'El nombre del restaurante no puede estar vacío'
+    'string.empty': 'El título del restaurante no puede estar vacío'
   }),
   location: Joi.object({
     lat: Joi.number().messages({
