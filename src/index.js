@@ -9,6 +9,8 @@ import paymentRoute from './routes/payment.route.js';
 import restaurantRoute from './routes/restaurant.route.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
+import paymentRoute from './routes/payment.route.js';
+import osmRoutes from './routes/osmRoutes.js';
 
 // Declaración de la variable app para usar express
 const app = express()
@@ -39,6 +41,8 @@ app.get('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCam
 app.use('/api/test', testRouter);
 app.use('/api/user', userRoutes);
 app.use('/api/payment', paymentRoute);
+// Usar las rutas de OSM
+app.use('/api', osmRoutes);
 app.use('/api/restaurants', restaurantRoute);
 
 // Manejador de errores
