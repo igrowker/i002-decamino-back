@@ -97,13 +97,13 @@ export const GETUser = async (req, res) => {
 
 export const PUTUser = async (req, res, next) => {
   const { id } = req.user
-  const { username, email, role } = req.body
+  const data = req.body
   try {
-    const { error } = updateSchema.validate({ username, email, role });
+    const { error, value } = updateSchema.validate(data);
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await userServices.updateUser(id, { username, email, role })
+    const response = await userServices.updateUser(id, value)
 
     return res.status(200).json({ response: new UserDto(response) });
   }
