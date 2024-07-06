@@ -13,6 +13,7 @@ export const getRoute = async (start, end) => {
         });
         return result;
     } catch (error) {
+        console.error('Error fetching route:', error.message);
         throw new Error(error.message);
     }
 }
