@@ -25,12 +25,12 @@ export const injectUser = async (req, res, next) => {
     if (!user) {
       // En caso de no existir, el req.user quedará vacío y se seguirá corriendo la api de esa manera
       req.user = null;
-    } 
+    }
     else {
       // Si existe, se inyecta la data del usuario en el req.user para que se pueda acceder posteriormente
-      req.user = data;
+      req.user = user;
     }
-  } 
+  }
   catch (err) {
     // Ante cualquier error, el req.user quedará vacío
     req.user = null;
@@ -56,13 +56,26 @@ export const requireAuth = (req, res, next) => {
   }
 };
 
-export const validateUser = (req, res, next) => {
+export const isMerchant = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const isMerchant = req.user.role === 'merchant'
 
-    if (!req.user || req.user.id !== id) {
-      return CustomError.new(dictionary.authorization)
-    }
+    if (!isMerchant) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const isRestaurantOwner = async (req, res, next) => {
+  const restaurantId = req.params.id
+  try {
+
+    const isOwner = req.user.restaurant.toString() === restaurantId
+
+    if (!isOwner) return CustomError.new(dictionary.authorization)
 
     next();
   }

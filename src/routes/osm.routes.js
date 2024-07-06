@@ -3,6 +3,6 @@ import { getOsmDataController } from '../controllers/osmController.js';
 
 const router = express.Router();
 
-router.get('/osm', getOsmDataController);
+router.get('/', getOsmDataController);
 
 export default router;

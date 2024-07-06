@@ -39,7 +39,12 @@ export const readRestaurantById = async (id) => {
 
 export const updateRestaurant = async (id, data) => {
   try {
+    const restaurant = await Restaurant.findById(id)
+
+    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
+
     const response = await Restaurant.findByIdAndUpdate(id, data, { new: true })
+
     return response;
   }
   catch (error) {
@@ -49,7 +54,12 @@ export const updateRestaurant = async (id, data) => {
 
 export const destroyRestaurant = async (id) => {
   try {
+    const restaurant = await Restaurant.findById(id)
+
+    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
+
     const response = await Restaurant.findByIdAndDelete(id)
+    
     return response;
   }
   catch (error) {
