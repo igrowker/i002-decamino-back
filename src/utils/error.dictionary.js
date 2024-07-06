@@ -15,6 +15,10 @@ const dictionary = {
     status: 404,
     message: "El usuario no existe"
   },
+  restaurantNotFound: {
+    status: 404,
+    message: "El restaurante no existe"
+  },
   requiresTOTP: {
     status: 400,
     message: "Este usuario requiere código TOTP"

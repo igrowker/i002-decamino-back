@@ -41,8 +41,7 @@ export const updateSchema = Joi.object({
   }),
   email: Joi.string().email().optional().messages({
     'string.email': 'Debe proporcionar un correo electrónico válido',
-  }),
-  role: Joi.string().valid('merchant', 'traveler').optional().messages({
-    'any.only': 'El rol debe ser uno de los siguientes valores: merchant, traveler'
   })
-})
+}).or('username', 'email').messages({
+  'object.missing': 'Debe proporcionar al menos un parámetro: username o email'
+});

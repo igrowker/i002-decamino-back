@@ -1,4 +1,4 @@
-import { getRoute } from '../services/routeService.js';
+import { getRoute } from '../services/route.service.js';
 
 export const getRouteController = async (req, res) => {
     try {

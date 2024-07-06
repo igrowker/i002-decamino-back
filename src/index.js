@@ -2,15 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
 import { injectUser } from './middlewares/auth.middleware.js';
-import testRouter from './routes/test.route.js';
-import userRoutes from './routes/user.route.js';
 import { setupSwagger } from './config/swagger.js'; 
+import testRoutes from './routes/test.routes.js';
+import userRoutes from './routes/user.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import restaurantRoutes from './routes/restaurant.routes.js';
+import osmRoutes from './routes/osm.routes.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
-import paymentRoute from './routes/payment.route.js';
-import osmRoutes from './routes/osmRoutes.js';
-import routeRoutes from './routes/routeRoutes.js';
 
+// import paymentRoute from './routes/payment.route.js';
+// import osmRoutes from './routes/osmRoutes.js';
+import routeRoutes from './routes/route.routes.js';
 // Declaración de la variable app para usar express
 const app = express()
 
@@ -19,11 +22,14 @@ const PORT = process.env.PORT || 8080
 
 // Adición de Swagger para documentación
 setupSwagger(app);
+
 // Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoute);
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoutes);
+
 // Se agregan estos dos métodos para que express pueda leer formularios y json
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
 // Se habilita cors para que se pueda consumir la api desde distintos dominios
 app.use(cors())
 
@@ -34,12 +40,14 @@ app.use(injectUser)
 app.get('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
 
 // Declaración de endpoints llamando a routes
-app.use('/api/test', testRouter);
+app.use('/api/test', testRoutes);
 app.use('/api/user', userRoutes);
-app.use('/api/payment', paymentRoute);
 // Usar las rutas de OSM y de Rutas
 app.use('/api', osmRoutes);
 app.use('/api', routeRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/restaurants', restaurantRoutes);
+
 // Manejador de errores
 app.use(errorHandler);
 
