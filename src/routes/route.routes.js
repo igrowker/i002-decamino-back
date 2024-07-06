@@ -3,6 +3,6 @@ import { getRouteController } from '../controllers/route.controller.js';
 
 const router = express.Router();
 
-router.get('/route', getRouteController);
+router.get('/', getRouteController);
 
 export default router;
