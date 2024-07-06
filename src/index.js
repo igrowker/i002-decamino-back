@@ -2,34 +2,56 @@ import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
 import { injectUser } from './middlewares/auth.middleware.js';
-import testRouter from './routes/test.route.js';
-import userRoutes from './routes/user.route.js';
-import { setupSwagger } from './config/swagger.js';
-
+import { setupSwagger } from './config/swagger.js'; 
+import testRoutes from './routes/test.routes.js';
+import userRoutes from './routes/user.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import restaurantRoutes from './routes/restaurant.routes.js';
+import osmRoutes from './routes/osm.routes.js';
+import routeRoutes from './routes/route.routes.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
 import reviewRoutes from './routes/review.route.js';
+// Declaración de la variable app para usar express
 const app = express()
+
+// Declaración del puerto que se va a utilizar
 const PORT = process.env.PORT || 8080
 
+// Adición de Swagger para documentación
 setupSwagger(app);
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+
+// Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoutes);
+
+// Se agregan estos dos métodos para que express pueda leer formularios y json
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+// Se habilita cors para que se pueda consumir la api desde distintos dominios
 app.use(cors())
 
+// Middleware que inyecta la info del user (que viene a través del jwt en headers) en req.user para poder acceder a esta info en el resto de la ejecución de la api
 app.use(injectUser)
 
+// Este endpoint da un mensaje de bienvenida
 app.get('/', (req, res) => res.status(200).json({ message: '¡Bienvenido a DeCamino!' }))
-app.use('/api/test', testRouter);
+
+// Declaración de endpoints llamando a routes
+app.use('/api/test', testRoutes);
 app.use('/api/user', userRoutes);
-app.use('/api/review',reviewRoutes);
+app.use('/api/osm', osmRoutes);
+app.use('/api/routes', routeRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/restaurants', restaurantRoutes);
 
-
-
-
+// Manejador de errores
 app.use(errorHandler);
+
+// Manejador de errores 404 (endpoints no encontrados)
 app.use(notFoundHandler);
 
+// Comienzo del listening para conectar con MongoDB y correr express en el puerto previamente declarado
 app.listen(PORT, async () => {
   await connection()
   console.log("Server listening on PORT ❤️ 🔥🔥: " + PORT);
