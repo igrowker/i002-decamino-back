@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as reviewsController from '../controllers/review.controller.js'
-import { requireAuth, isTraveler } from '../middlewares/auth.middleware.js'
+import { requireAuth, isTraveler, isReviewAuthor } from '../middlewares/auth.middleware.js'
 
 //declaro variable que tiene de rutas / instanciando el objeto router
 const router = Router();
@@ -9,7 +9,7 @@ const router = Router();
 router.post('/restaurant/:id', requireAuth, isTraveler, reviewsController.POSTReview)
   .get('/restaurant/:id', reviewsController.GETReviewsByRestaurant)
   .get('/:id', reviewsController.GETReviewById)
-  .put('/:id', requireAuth, isTraveler, reviewsController.PUTReview)
-  .delete('/:id', requireAuth, isTraveler, reviewsController.DELETEReview)
+  .put('/:id', requireAuth, isTraveler, isReviewAuthor, reviewsController.PUTReview)
+  .delete('/:id', requireAuth, isTraveler, isReviewAuthor, reviewsController.DELETEReview)
 
 export default router;

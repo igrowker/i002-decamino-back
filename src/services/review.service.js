@@ -64,10 +64,6 @@ export const readReviewById = async (id) => {  //metodo que trae una sola reseñ
 
 export const updateReview = async (id, data) => {
   try {
-    const review = await Review.findById(id)
-
-    if (!review) return CustomError.new(dictionary.reviewNotFound)
-
     const response = await Review.findByIdAndUpdate(id, data, { new: true }) //me devuelve una resp con el obj ya modificado
 
     return response
@@ -79,10 +75,6 @@ export const updateReview = async (id, data) => {
 
 export const destroyReview = async (id) => {
   try {
-    const review = await Review.findById(id)
-
-    if (!review) return CustomError.new(dictionary.reviewNotFound)
-
     const response = await Review.findByIdAndDelete(id) // buscar por id y eliminar
 
     return response
