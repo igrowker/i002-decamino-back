@@ -1,5 +1,6 @@
 import { verifyToken } from '../utils/jwt.js'
 import User from '../models/user.model.js'
+import Review from '../models/review.model.js';
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js'
 
@@ -69,13 +70,43 @@ export const isMerchant = async (req, res, next) => {
   }
 }
 
+export const isTraveler = async (req, res, next) => {
+  try {
+    const isMerchant = req.user.role === 'traveler'
+
+    if (!isMerchant) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
 export const isRestaurantOwner = async (req, res, next) => {
   const restaurantId = req.params.id
   try {
-
     const isOwner = req.user.restaurant.toString() === restaurantId
 
     if (!isOwner) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const isReviewAuthor = async (req, res, next) => {
+  const reviewId = req.params.id
+  try {
+    const review = await Review.findById(reviewId)
+
+    if (!review) return CustomError.new(dictionary.reviewNotFound)
+
+    const isAuthor = req.user._id.toString() === review.user.toString()
+
+    if (!isAuthor) return CustomError.new(dictionary.authorization)
 
     next();
   }

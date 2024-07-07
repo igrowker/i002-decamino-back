@@ -9,6 +9,7 @@ import paymentRoutes from './routes/payment.routes.js';
 import restaurantRoutes from './routes/restaurant.routes.js';
 import osmRoutes from './routes/osm.routes.js';
 import routeRoutes from './routes/route.routes.js';
+import reviewRoutes from './routes/review.routes.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
 
@@ -44,6 +45,7 @@ app.use('/api/osm', osmRoutes);
 app.use('/api/routes', routeRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/reviews', reviewRoutes)
 
 // Manejador de errores
 app.use(errorHandler);
