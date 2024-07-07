@@ -1,6 +1,7 @@
 import Restaurant from "../models/restaurant.model.js"
 import CustomError from "../utils/custom.error.js"
 import dictionary from "../utils/error.dictionary.js"
+import getRating from "../utils/get.rating.js"
 
 export const createRestaurant = async (data) => {
   try {
@@ -16,7 +17,16 @@ export const readRestaurants = async ({ cuisine, limit, page }) => {
   try {
     const query = cuisine ? { cuisine } : {};
     const skip = limit && page ? limit * (page - 1) : 0;
-    const response = await Restaurant.find(query).skip(skip).limit(limit || 0);
+
+    const restaurants = await Restaurant.find(query).skip(skip).limit(limit || 0);
+
+    const response = await Promise.all(
+      restaurants.map(async (restaurant) => {
+        const rating = await getRating(restaurant._id);
+        return { ...restaurant.toObject(), rating };
+      })
+    );
+
     return response;
   }
   catch (error) {
@@ -26,11 +36,13 @@ export const readRestaurants = async ({ cuisine, limit, page }) => {
 
 export const readRestaurantById = async (id) => {
   try {
-    const response = await Restaurant.findById(id)
+    const restaurant = await Restaurant.findById(id)
 
-    if (!response) return CustomError.new(dictionary.restaurantNotFound)
-    
-    return response;
+    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
+
+    const rating = await getRating(restaurant._id);
+
+    return { ...restaurant.toObject(), rating };
   }
   catch (error) {
     throw error
@@ -59,7 +71,7 @@ export const destroyRestaurant = async (id) => {
     if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
 
     const response = await Restaurant.findByIdAndDelete(id)
-    
+
     return response;
   }
   catch (error) {
