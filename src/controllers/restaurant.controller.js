@@ -34,6 +34,7 @@ export const GETRestaurants = async (req, res, next) => {
     next(error);
   }
 };
+
 export const GETRestaurantById = async (req, res, next) => {
   const { id } = req.params
   try {
