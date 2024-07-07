@@ -1,71 +1,77 @@
-///controllers/reseñasController.js
-
-import * as reseñasServices from '../services/review.service.js'
+// todo req es controladores
+import * as reviewServices from '../services/review.service.js'
+import { createSchema, updateSchema } from '../schemas/review.schema.js'
+import CustomError from '../utils/custom.error.js';
 
 // Crear una nueva reseña
-export const POSTReview = async (req, res) => {
-    try {
-        const { user, restaurant,rating, comment} = req.body; // controller uso info de peticion 
-        const newReseñas = await reseñasServices.createReseñas({ user, restaurant,rating,comment})
+export const POSTReview = async (req, res, next) => {
+  const data = req.body; // controller uso info de peticion 
+  const restaurantId = req.params.id
+  const userId = req.user.id
+  try {
+    const { error, value } = createSchema.validate({...data, restaurant: restaurantId});
 
-        // todo req es controladores
-        res.status(201).json(newReseñas); //json nombre llave = valor 
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await reviewServices.createReview({ ...value, user: userId, restaurant: restaurantId })
+
+    return res.status(201).json(response); //json nombre llave = valor 
+  }
+  catch (error) {
+    next(error)
+  }
 };
 
 // Obtener todas las reseñas
-export const GETReviews = async (req, res) => {
-    try {
-        const reseñas = await reseñasServices.readReseñas() //me trae todas las reseñas
-        res.status(200).json(reseñas);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+export const GETReviewsByRestaurant = async (req, res, next) => {
+  const restaurantId = req.params.id
+  try {
+    const response = await reviewServices.readReviews(restaurantId) // me trae todas las reseñas pertenecientes al restaurante
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
 };
 
 // Obtener una reseña por ID
-export const GETReviewById = async (req, res) => {
-    const id = req.params.id
-    try {
-        const reseñas = await reseñasServices.readReseñasById(id)
-        if (!reseñas) {
-            return res.status(404).json({ error: 'Reseña no encontrada' });
-        }
-        res.status(200).json(reseñas);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+export const GETReviewById = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const response = await reviewServices.readReviewById(id)
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
 };
 
 // Actualizar una reseña
-export const PUTReview = async (req, res) => {
-    try {
-        const  data = req.body;
-        const id = req.params.id
-        const updatedReseñas = await reseñasServices.updateReseñas(id,data)
-            
-      
-        if (!updatedReseñas) {
-            return res.status(404).json({ error: 'Reseña no encontrada' });
-        }
-        res.status(200).json(updatedReseñas);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+export const PUTReview = async (req, res, next) => {
+  const data = req.body;
+  const { id } = req.params
+  try {
+    const { error, value } = updateSchema.validate(data);
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await reviewServices.updateReview(id, value)
+
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
 };
 
 // Eliminar una reseña
-export const DELETEReview = async (req, res) => {
-       const id = req.params.id
-    try {
-        const deletedReseñas = await reseñasServices.destroyReseña(id) //busca reseña y la elimina
-        if (!deletedReseñas) {
-            return res.status(404).json({ error: 'Reseña no encontrada' });
-        }
-        res.status(200).json({ message: 'Reseña eliminada correctamente' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+export const DELETEReview = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const response = await reviewServices.destroyReview(id) // busca reseña y la elimina
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
+  }
 };

@@ -39,12 +39,6 @@ const restaurantSchema = new Schema({
   takeAway: {
     type: Boolean,
     default: false
-  },
-  rating: {
-    type: Number,
-    min: 1,
-    max: 10,
-    default: 1
   }
 },
   {

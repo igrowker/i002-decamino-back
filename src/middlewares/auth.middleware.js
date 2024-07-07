@@ -69,6 +69,19 @@ export const isMerchant = async (req, res, next) => {
   }
 }
 
+export const isTraveler = async (req, res, next) => {
+  try {
+    const isMerchant = req.user.role === 'traveler'
+
+    if (!isMerchant) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
 export const isRestaurantOwner = async (req, res, next) => {
   const restaurantId = req.params.id
   try {

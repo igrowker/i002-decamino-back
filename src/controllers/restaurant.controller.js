@@ -2,10 +2,13 @@ import { updateSchema, createSchema } from '../schemas/restaurant.schema.js';
 import * as restaurantServices from '../services/restaurant.service.js'
 import * as userServices from '../services/user.service.js'
 import CustomError from '../utils/custom.error.js'
+import dictionary from '../utils/error.dictionary.js';
 
 export const POSTRestaurant = async (req, res, next) => {
   const data = req.body;
   try {
+    if (req.user.restaurant) return CustomError.new(dictionary.hasRestaurant)
+
     const { error, value } = createSchema.validate(data);
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
