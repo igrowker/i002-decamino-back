@@ -2,11 +2,31 @@ import Restaurant from "../models/restaurant.model.js"
 import CustomError from "../utils/custom.error.js"
 import dictionary from "../utils/error.dictionary.js"
 import getRating from "../utils/get.rating.js"
+import { uploadRestaurantImages } from '../config/cloudinary.js'
 
 export const createRestaurant = async (data) => {
   try {
     const response = await Restaurant.create(data)
     return response
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const uploadRestaurantPhotos = async (id, files) => {
+  try {
+    const results = await uploadRestaurantImages(files, id)
+
+    const imageUrls = results.map(result => result.secure_url);
+
+    const restaurant = await Restaurant.findByIdAndUpdate(
+      id,
+      { $push: { photos: { $each: imageUrls } } },
+      { new: true }
+    );
+
+    return restaurant
   }
   catch (error) {
     throw error
