@@ -48,13 +48,13 @@ export const GETRestaurantById = async (req, res, next) => {
 };
 export const PUTRestaurant = async (req, res, next) => {
   const data = req.body;
-  const { id } = req.params
+  const restaurantId = req.user.restaurant
   try {
     const { error, value } = updateSchema.validate(data);
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await restaurantServices.updateRestaurant(id, value);
+    const response = await restaurantServices.updateRestaurant(restaurantId, value);
 
     return res.status(200).json(response);
   }
@@ -65,9 +65,9 @@ export const PUTRestaurant = async (req, res, next) => {
 
 
 export const DELETERestaurant = async (req, res, next) => {
-  const { id } = req.params
+  const restaurantId = req.user.restaurant
   try {
-    const response = await restaurantServices.destroyRestaurant(id)
+    const response = await restaurantServices.destroyRestaurant(restaurantId)
 
     await userServices.updateUser(req.user.id, { restaurant: null })
 

@@ -83,13 +83,10 @@ export const isTraveler = async (req, res, next) => {
   }
 }
 
-export const isRestaurantOwner = async (req, res, next) => {
-  const restaurantId = req.params.id
+export const hasRestaurant = async (req, res, next) => {
   try {
-    const isOwner = req.user.restaurant.toString() === restaurantId
-
-    if (!isOwner) return CustomError.new(dictionary.authorization)
-
+    const restaurantId = req.user.restaurant
+    if (!restaurantId) return CustomError.new(dictionary.noRestaurant)
     next();
   }
   catch (error) {

@@ -19,6 +19,10 @@ const dictionary = {
     status: 400,
     message: "El usuario ya tiene un restaurante a su nombre"
   },
+  noRestaurant: {
+    status: 404,
+    message: "El usuario no tiene un restaurante a su nombre"
+  },
   restaurantNotFound: {
     status: 404,
     message: "El restaurante no existe"
