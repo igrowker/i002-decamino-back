@@ -36,4 +36,14 @@ export const uploadRestaurantImages = async (files, id) => {
   return Promise.all(uploadPromises);
 };
 
+export const deleteCloudinaryPhoto = async (publicId) => {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result
+  } 
+  catch (error) {
+    throw error
+  }
+};
+
 export default cloudinary

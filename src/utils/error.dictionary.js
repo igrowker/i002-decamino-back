@@ -3,6 +3,14 @@ const dictionary = {
     status: 400,
     message: "No se ha subido ningún archivo"
   },
+  missingPhotoUrl: {
+    status: 400,
+    message: "Falta la URL de la foto"
+  },
+  photoNotFound: {
+    status: 404,
+    message: "La foto no existe"
+  },
   emailExists: {
     status: 400,
     message: "Correo electrónico ya registrado"

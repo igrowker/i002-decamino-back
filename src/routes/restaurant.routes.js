@@ -11,5 +11,6 @@ router.post('/', requireAuth, isMerchant, restaurantController.POSTRestaurant)
 .get('/:id', restaurantController.GETRestaurantById)
 .put('/', requireAuth, isMerchant, hasRestaurant, restaurantController.PUTRestaurant)
 .delete('/', requireAuth, isMerchant, hasRestaurant, restaurantController.DELETERestaurant)
+.delete('/photos', requireAuth, isMerchant, hasRestaurant, restaurantController.DELETERestaurantPhoto)
 
 export default router;

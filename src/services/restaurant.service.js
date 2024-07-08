@@ -2,7 +2,7 @@ import Restaurant from "../models/restaurant.model.js"
 import CustomError from "../utils/custom.error.js"
 import dictionary from "../utils/error.dictionary.js"
 import getRating from "../utils/get.rating.js"
-import { uploadRestaurantImages } from '../config/cloudinary.js'
+import { uploadRestaurantImages, deleteCloudinaryPhoto } from '../config/cloudinary.js'
 
 export const createRestaurant = async (data) => {
   try {
@@ -32,6 +32,29 @@ export const uploadRestaurantPhotos = async (id, files) => {
     throw error
   }
 }
+
+export const removePhotoFromRestaurant = async (id, photoUrl) => {
+  try {
+    const publicId = photoUrl.split('/').slice(7).join('/').split('.')[0];
+
+    const result = await deleteCloudinaryPhoto(publicId);
+
+    if (result.result === 'not found') {
+      return CustomError.new(dictionary.photoNotFound)
+    }
+
+    const restaurant = await Restaurant.findByIdAndUpdate(
+      id,
+      { $pull: { photos: photoUrl } },
+      { new: true }
+    );
+
+    return restaurant;
+  } 
+  catch (error) {
+    throw error
+  }
+};
 
 export const readRestaurants = async ({ cuisine, limit, page }) => {
   try {
@@ -71,10 +94,6 @@ export const readRestaurantById = async (id) => {
 
 export const updateRestaurant = async (id, data) => {
   try {
-    const restaurant = await Restaurant.findById(id)
-
-    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
-
     const response = await Restaurant.findByIdAndUpdate(id, data, { new: true })
 
     return response;
@@ -86,10 +105,6 @@ export const updateRestaurant = async (id, data) => {
 
 export const destroyRestaurant = async (id) => {
   try {
-    const restaurant = await Restaurant.findById(id)
-
-    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
-
     const response = await Restaurant.findByIdAndDelete(id)
 
     return response;
