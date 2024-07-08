@@ -27,10 +27,10 @@ const fileFilter = (req, file, cb) => {
 // Configurar límites de tamaño de archivo
 const limits = { fileSize: 3 * 1024 * 1024 }; // 3 MB
 
-const upload = multer({
+export const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: limits
 });
 
-export default upload
+export const uploadMultiple = upload.array('photos', 5);

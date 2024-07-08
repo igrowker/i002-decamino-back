@@ -3,6 +3,7 @@ import User from '../models/user.model.js'
 import Review from '../models/review.model.js';
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js'
+import Restaurant from '../models/restaurant.model.js';
 
 // Middleware para inyección de info de usuario en req.user
 export const injectUser = async (req, res, next) => {
@@ -85,8 +86,12 @@ export const isTraveler = async (req, res, next) => {
 
 export const hasRestaurant = async (req, res, next) => {
   try {
-    const restaurantId = req.user.restaurant
-    if (!restaurantId) return CustomError.new(dictionary.noRestaurant)
+    const id = req.user.restaurant
+
+    const restaurant = await Restaurant.findById(id)
+
+    if (!restaurant) return CustomError.new(dictionary.noRestaurant)
+
     next();
   }
   catch (error) {

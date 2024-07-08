@@ -65,19 +65,9 @@ export const POSTProfileImg = async (req, res, next) => {
 
     const result = await userServices.uploadProfileImg(id, req.file)
 
-    const updatedUser = await userServices.updateUser(id, { profileImg: result.secure_url })
-
-    const updatedUserData = new UserDto(updatedUser);
-
-    const token = generateToken({ ...updatedUserData })
-
     fs.unlinkSync(req.file.path);  // Eliminación de la imagen en local
 
-    res.status(200).json({
-      message: 'Image uploaded successfully',
-      imageUrl: result.secure_url,
-      token
-    });
+    res.status(200).json({ message: 'Imagen subida exitosamente', url: result.profileImg });
   }
   catch (error) {
     next(error)
