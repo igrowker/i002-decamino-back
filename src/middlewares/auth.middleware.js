@@ -1,7 +1,9 @@
 import { verifyToken } from '../utils/jwt.js'
 import User from '../models/user.model.js'
+import Review from '../models/review.model.js';
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js'
+import Restaurant from '../models/restaurant.model.js';
 
 // Middleware para inyección de info de usuario en req.user
 export const injectUser = async (req, res, next) => {
@@ -25,12 +27,12 @@ export const injectUser = async (req, res, next) => {
     if (!user) {
       // En caso de no existir, el req.user quedará vacío y se seguirá corriendo la api de esa manera
       req.user = null;
-    } 
+    }
     else {
       // Si existe, se inyecta la data del usuario en el req.user para que se pueda acceder posteriormente
-      req.user = data;
+      req.user = user;
     }
-  } 
+  }
   catch (err) {
     // Ante cualquier error, el req.user quedará vacío
     req.user = null;
@@ -56,13 +58,57 @@ export const requireAuth = (req, res, next) => {
   }
 };
 
-export const validateUser = (req, res, next) => {
+export const isMerchant = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const isMerchant = req.user.role === 'merchant'
 
-    if (!req.user || req.user.id !== id) {
-      return CustomError.new(dictionary.authorization)
-    }
+    if (!isMerchant) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const isTraveler = async (req, res, next) => {
+  try {
+    const isMerchant = req.user.role === 'traveler'
+
+    if (!isMerchant) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const hasRestaurant = async (req, res, next) => {
+  try {
+    const id = req.user.restaurant
+
+    const restaurant = await Restaurant.findById(id)
+
+    if (!restaurant) return CustomError.new(dictionary.noRestaurant)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const isReviewAuthor = async (req, res, next) => {
+  const reviewId = req.params.id
+  try {
+    const review = await Review.findById(reviewId)
+
+    if (!review) return CustomError.new(dictionary.reviewNotFound)
+
+    const isAuthor = req.user._id.toString() === review.user.toString()
+
+    if (!isAuthor) return CustomError.new(dictionary.authorization)
 
     next();
   }

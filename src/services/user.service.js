@@ -3,11 +3,10 @@ import qrcode from 'qrcode'
 import User from '../models/user.model.js';
 import CustomError from '../utils/custom.error.js';
 import dictionary from '../utils/error.dictionary.js'
-import cloudinary from '../config/cloudinary.js';
+import cloudinary, { uploadProfileImage } from '../config/cloudinary.js';
 
 export const registerUser = async (data) => {
   try {
-
     const user = await User.findOne({ email: data.email })
 
     if (user) return CustomError.new(dictionary.emailExists)
@@ -85,17 +84,11 @@ export const create2fa = async (id) => {
 
 export const uploadProfileImg = async (id, file) => {
   try {
-    const result = await cloudinary.uploader.upload(file.path, {
-      public_id: "profile-img/" + id,  // Nombre que tendrá el archivo
-      folder: id, // Carpeta donde se guardará el archivo
-      format: 'webp',
-      transformation: [
-        { width: 500, height: 500, crop: "fill" }, // Redimensionar y hacer cuadrada
-        { fetch_format: "auto", quality: "auto" }  // Optimizar la imagen
-      ]
-    });
+    const result = await uploadProfileImage(file, id)
 
-    return result
+    const user = await User.findByIdAndUpdate(id, { profileImg: result.secure_url }, { new: true })
+
+    return user
   }
   catch (error) {
     throw error
