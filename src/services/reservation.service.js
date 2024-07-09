@@ -10,8 +10,7 @@ export const createReservation = async (data) => {
   }
 }
 
-export const GETReservations = async (data) => {
-
+export const readReservationsByRestaurant = async (data) => {
   try {
     const response = await Reservation.create(data);
     return response
