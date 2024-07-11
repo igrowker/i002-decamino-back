@@ -17,3 +17,4 @@ router.get('/', testController.GETTest)
 // Donde está el "/:id" significa que en ese lugar se encontrará un valor que express reconocerá como req.params.id y al cual tendremos acceso en el controller
 
 export default router
+
