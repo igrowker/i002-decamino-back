@@ -1,8 +1,10 @@
-import Reservation from "../models/reservation.js"
+import Reservation from "../models/reservation.model.js"
+import CustomError from "../utils/custom.error.js";
+import dictionary from "../utils/error.dictionary.js";
 
 export const createReservation = async (data) => {
   try {
-    const response = await Reservation.create(data);
+    const response = await Reservation.create({ ...data, status: 'pendiente' });
     return response
   }
   catch (error) {
@@ -10,9 +12,9 @@ export const createReservation = async (data) => {
   }
 }
 
-export const readReservationsByRestaurant = async (data) => {
+export const readReservationsByRestaurant = async (id) => {
   try {
-    const response = await Reservation.create(data);
+    const response = await Reservation.find({ restaurant: id });
     return response
   }
   catch (error) {
@@ -20,10 +22,9 @@ export const readReservationsByRestaurant = async (data) => {
   }
 }
 
-export const GETReservationById = async (data) => {
-
+export const readReservationsByUser = async (id) => {
   try {
-    const response = await Reservation.create(data);
+    const response = await Reservation.find({ user: id });
     return response
   }
   catch (error) {
@@ -31,21 +32,14 @@ export const GETReservationById = async (data) => {
   }
 }
 
-export const updatedReservationReservation = async (data) => {
-
+export const updateReservation = async (id, data) => {
   try {
-    const response = await Reservation.create(data);
-    return response
-  }
-  catch (error) {
-    throw error
-  }
-}
+    const reservation = Reservation.findById(id)
 
-export const DELETEReservation = async (data) => {
+    if (!reservation) return CustomError.new(dictionary.reservationNotFound)
 
-  try {
-    const response = await Reservation.create(data);
+    const response = await Reservation.findByIdAndUpdate(id, data, { new: true })
+
     return response
   }
   catch (error) {

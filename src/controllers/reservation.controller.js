@@ -1,72 +1,67 @@
-//Aca van los controladores
-
-// /controllers/reservationController.js
-
 import * as reservationServices from '../services/reservation.service.js'
+import { createSchema, updateSchema } from '../schemas/reservation.schema.js';
+import CustomError from '../utils/custom.error.js';
 
-// Crear una nueva reserva 
-export const POSTReservation = async (req, res) => {
+export const POSTReservation = async (req, res, next) => {
+  const data = req.body
+  const restaurantId = req.params.id
   try {
-    const { user, restaurant, date, status } = req.body; // controller uso info de peticion 
-    const newReservation =  await reservationServices.createReservation({user, restaurant, date, status}) // llamo a b.datos crea va a servicios
-   
-    // todo req es controladores
-    res.status(201).json(newReservation); //json nombre  llave = valor
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const { error, value } = createSchema.validate({ ...data, restaurant: restaurantId });
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await reservationServices.createReservation({ ...value, user: req.user.id });
+
+    return res.status(201).json(response);
+  }
+  catch (error) {
+    next(error)
   }
 };
 
-// Obtener todas las reservas
-export const GETReservations = async (req, res) => {
+export const PUTReservationCancel = async (req, res, next) => {
+  const { id } = req.params;
   try {
-    const reservations = await Reservation.find();
-    res.status(200).json(reservations);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const response = await reservationServices.updateReservation(id, { status: 'cancelada' });
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error);
   }
 };
 
-// Obtener una reserva por ID
-export const GETReservationById = async (req, res) => {
+export const GETUserReservations = async (req, res, next) => {
   try {
-    const reservation = await Reservation.findById(req.params.id);
-    if (!reservation) {
-      return res.status(404).json({ error: 'Reserva no encontrada' });
-    }
-    res.status(200).json(reservation);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const response = await reservationServices.readReservationsByUser(req.user.id);
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
   }
 };
 
-// Actualizar una reserva
-export const updatedReservationReservation = async (req, res) => {
+export const GETRestaurantReservations = async (req, res, next) => {
   try {
-    const { user, restaurant, date, status } = req.body;
-    const updatedReservation = await Reservation.findByIdAndUpdate(
-      req.params.id,
-      { user, restaurant, date, status },
-      { new: true }
-    );
-    if (!updatedReservation) {
-      return res.status(404).json({ error: 'Reserva no encontrada' });
-    }
-    res.status(200).json(updatedReservation);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const response = await reservationServices.readReservationsByRestaurant(req.user.restaurant);
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
   }
 };
 
-// Eliminar una reserva
-export const DELETEReservation = async (req, res) => {
+export const PUTReservationStatus = async (req, res, next) => {
+  const { id } = req.params
   try {
-    const deletedReservation = await Reservation.findByIdAndDelete(req.params.id);
-    if (!deletedReservation) {
-      return res.status(404).json({ error: 'Reserva no encontrada' });
-    }
-    res.status(200).json({ message: 'Reserva eliminada correctamente' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const { error, value } = updateSchema.validate(req.body);
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await reservationServices.updateReservation(id, { status: value.status });
+
+    return res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
   }
 };

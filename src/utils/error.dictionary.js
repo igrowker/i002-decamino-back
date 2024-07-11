@@ -39,9 +39,17 @@ const dictionary = {
     status: 404,
     message: "La reseña no existe"
   },
+  reservationNotFound: {
+    status: 404,
+    message: "La reserva no existe"
+  },
   alreadyReviewed: {
     status: 400,
     message: "Este usuario ya hizo una reseña de este restaurant"
+  },
+  invalidId: {
+    status: 400,
+    message: "El ID proporcionado no es válido"
   },
   requiresTOTP: {
     status: 400,
