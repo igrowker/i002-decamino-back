@@ -6,23 +6,22 @@ const routeSchema = new Schema({
     ref: 'User',
     required: true
   },
-  startLocation: {
+  start: {
     type: String,
     required: true
   },
-  endLocation: {
+  end: {
     type: String,
     required: true
   },
-  suggestedRestaurants: [{
+  waypoints: [{
     type: Schema.Types.ObjectId,
     ref: 'Restaurant'
-  }],
-  created_at: {
-    type: Date,
-    default: Date.now
-  }
-});
+  }]
+}, {
+  timestamps: true
+}
+);
 
 const Route = mongoose.model('Route', routeSchema);
 
