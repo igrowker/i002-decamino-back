@@ -5,10 +5,10 @@ import { requireAuth, isTraveler, isReviewAuthor, validateId } from '../middlewa
 const router = Router();
 
 // Rutas para las reviews
-router.post('/restaurant/:id', requireAuth, isTraveler, reviewsController.POSTReview)
+router.post('/restaurant/:id', requireAuth, isTraveler, validateId, reviewsController.POSTReview)
   .get('/restaurant/:id', validateId, reviewsController.GETReviewsByRestaurant)
-  .get('/:id', reviewsController.GETReviewById)
-  .put('/:id', requireAuth, isTraveler, isReviewAuthor, reviewsController.PUTReview)
-  .delete('/:id', requireAuth, isTraveler, isReviewAuthor, reviewsController.DELETEReview)
+  .get('/:id', validateId, reviewsController.GETReviewById)
+  .put('/:id', requireAuth, isTraveler, validateId, isReviewAuthor, reviewsController.PUTReview)
+  .delete('/:id', requireAuth, isTraveler, validateId, isReviewAuthor, reviewsController.DELETEReview)
 
 export default router;
