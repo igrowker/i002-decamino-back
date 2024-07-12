@@ -1,6 +1,8 @@
-import { createCheckoutSession, handlePaymentIntentSucceeded, handleCheckoutSessionCompleted ,
-  handleCheckoutSessionExpired
-} from '../services/payment.service.js';
+// import {
+//   createCheckoutSession, handlePaymentIntentSucceeded, handleCheckoutSessionCompleted,
+//   handleCheckoutSessionExpired, findPaymentsAll
+// } from '../services/payment.service.js';
+import * as paymentService from '../services/payment.service.js';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -9,7 +11,7 @@ export const createCheckoutSessionController = async (req, res) => {
   const { reservationId, description, pricePerPerson, numberOfPeople } = req.body;
 
   try {
-    const result = await createCheckoutSession({ reservationId, description, pricePerPerson, numberOfPeople });
+    const result = await paymentService.createCheckoutSession({ reservationId, description, pricePerPerson, numberOfPeople });
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -21,10 +23,10 @@ export const handleWebhookController = async (req, res) => {
   let event;
 
   try {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-      console.log(`⚠️ Error en la verificación de la firma del webhook.`, err.message);
-      return res.sendStatus(400);
+    console.log(`⚠️ Error en la verificación de la firma del webhook.`, err.message);
+    return res.sendStatus(400);
   }
 
   // switch (event.type) {
@@ -43,19 +45,20 @@ export const handleWebhookController = async (req, res) => {
   //     default:
   //         console.log(`Tipo de evento no controlado ${event.type}`);
   // }
+
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
         console.log("Entro en handlePaymentIntentSucceeded()");
-        await handlePaymentIntentSucceeded(event.data.object);
+        await paymentService.handlePaymentIntentSucceeded(event.data.object);
         break;
       case 'checkout.session.completed':
         console.log("Entro en handleCheckoutSessionCompleted()");
-        await handleCheckoutSessionCompleted(event.data.object);
+        await paymentService.handleCheckoutSessionCompleted(event.data.object);
         break;
       case 'checkout.session.expired':
         console.log("Entro en handleCheckoutSessionExpired()");
-        await handleCheckoutSessionExpired(event.data.object);
+        await paymentService.handleCheckoutSessionExpired(event.data.object);
         break;
       default:
         console.log(`Tipo de evento no controlado ${event.type}`);
@@ -67,3 +70,12 @@ export const handleWebhookController = async (req, res) => {
 
   res.json({ received: true });
 };
+
+export const GETPayments = async (req, res, next) => {
+  try {
+    const response = await paymentService.findPaymentsAll();
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
