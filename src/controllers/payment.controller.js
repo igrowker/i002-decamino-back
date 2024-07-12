@@ -27,18 +27,42 @@ export const handleWebhookController = async (req, res) => {
       return res.sendStatus(400);
   }
 
-  switch (event.type) {
+  // switch (event.type) {
+  //     case 'payment_intent.succeeded':
+  //         await handlePaymentIntentSucceeded(event.data.object);
+  //         console.log("Entro en handlePaymentIntentSucceeded()")
+  //         break;
+  //     case 'checkout.session.completed':
+  //         await handleCheckoutSessionCompleted(event.data.object);
+  //         console.log("Entro en handleCheckoutSessionCompleted()")
+  //         break;
+  //     case 'checkout.session.expired':
+  //         await handleCheckoutSessionExpired(event.data.object);
+  //         console.log("Entro en handleCheckoutSessionExpired()")
+  //         break;
+  //     default:
+  //         console.log(`Tipo de evento no controlado ${event.type}`);
+  // }
+  try {
+    switch (event.type) {
       case 'payment_intent.succeeded':
-          await handlePaymentIntentSucceeded(event.data.object);
-          break;
+        console.log("Entro en handlePaymentIntentSucceeded()");
+        await handlePaymentIntentSucceeded(event.data.object);
+        break;
       case 'checkout.session.completed':
-          await handleCheckoutSessionCompleted(event.data.object);
-          break;
+        console.log("Entro en handleCheckoutSessionCompleted()");
+        await handleCheckoutSessionCompleted(event.data.object);
+        break;
       case 'checkout.session.expired':
-          await handleCheckoutSessionExpired(event.data.object);
-          break;
+        console.log("Entro en handleCheckoutSessionExpired()");
+        await handleCheckoutSessionExpired(event.data.object);
+        break;
       default:
-          console.log(`Tipo de evento no controlado ${event.type}`);
+        console.log(`Tipo de evento no controlado ${event.type}`);
+    }
+  } catch (error) {
+    console.error(`Error handling event ${event.type}:`, error);
+    return res.sendStatus(500);
   }
 
   res.json({ received: true });
