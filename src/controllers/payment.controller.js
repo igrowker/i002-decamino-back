@@ -1,7 +1,3 @@
-// import {
-//   createCheckoutSession, handlePaymentIntentSucceeded, handleCheckoutSessionCompleted,
-//   handleCheckoutSessionExpired, findPaymentsAll
-// } from '../services/payment.service.js';
 import * as paymentService from '../services/payment.service.js';
 import Stripe from 'stripe';
 
