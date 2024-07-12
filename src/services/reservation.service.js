@@ -34,7 +34,7 @@ export const readReservationsByUser = async (id) => {
 
 export const updateReservation = async (id, data) => {
   try {
-    const reservation = Reservation.findById(id)
+    const reservation = await Reservation.findById(id)
 
     if (!reservation) return CustomError.new(dictionary.reservationNotFound)
 
