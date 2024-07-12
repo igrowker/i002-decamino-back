@@ -1,9 +1,11 @@
 import { verifyToken } from '../utils/jwt.js'
+import { isValidObjectId } from 'mongoose';
 import User from '../models/user.model.js'
 import Review from '../models/review.model.js';
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js'
 import Restaurant from '../models/restaurant.model.js';
+import Reservation from '../models/reservation.model.js';
 
 // Middleware para inyección de info de usuario en req.user
 export const injectUser = async (req, res, next) => {
@@ -84,9 +86,19 @@ export const isTraveler = async (req, res, next) => {
   }
 }
 
+export const validateId = (req, res, next) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) return CustomError.new(dictionary.invalidId)
+
+  next();
+};
+
 export const hasRestaurant = async (req, res, next) => {
   try {
     const id = req.user.restaurant
+
+    if (!id) return next(CustomError.new(dictionary.noRestaurant))
 
     const restaurant = await Restaurant.findById(id)
 
@@ -107,6 +119,24 @@ export const isReviewAuthor = async (req, res, next) => {
     if (!review) return CustomError.new(dictionary.reviewNotFound)
 
     const isAuthor = req.user._id.toString() === review.user.toString()
+
+    if (!isAuthor) return CustomError.new(dictionary.authorization)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const isReservationAuthor = async (req, res, next) => {
+  const reservationId = req.params.id
+  try {
+    const reservation = await Reservation.findById(reservationId)
+
+    if (!reservation) return CustomError.new(dictionary.reservationNotFound)
+
+    const isAuthor = req.user._id.toString() === reservation.user.toString()
 
     if (!isAuthor) return CustomError.new(dictionary.authorization)
 

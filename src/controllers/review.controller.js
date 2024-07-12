@@ -26,7 +26,7 @@ export const POSTReview = async (req, res, next) => {
 export const GETReviewsByRestaurant = async (req, res, next) => {
   const restaurantId = req.params.id
   try {
-    const response = await reviewServices.readReviews(restaurantId) // me trae todas las reseñas pertenecientes al restaurante
+    const response = await reviewServices.readReviewsByRestaurant(restaurantId) // me trae todas las reseñas pertenecientes al restaurante
     return res.status(200).json(response);
   }
   catch (error) {
