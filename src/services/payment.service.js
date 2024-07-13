@@ -12,6 +12,16 @@ export const findOne = async (data) => {
     }
 }
 
+export const findPaymentsAll = async (data) => {
+    try {
+        const payments = Payment.find();
+        console.log(payments);
+        return payments;
+    } catch (error) {
+        throw (error);
+    }
+}
+
 export const createCheckoutSession = async ({ reservationId, description, pricePerPerson, numberOfPeople }) => {
     try {
         // Todo: esperar a que modelen los datos de la reserva y creen el servicio
@@ -50,7 +60,7 @@ export const createCheckoutSession = async ({ reservationId, description, priceP
             // reservation: reservation._id,
             amount: totalPrice
         });
-
+        console.log("Pago creado en espera de confirmacion: ", payment);
         await Payment.create(payment);
 
         return { url: session.url };
