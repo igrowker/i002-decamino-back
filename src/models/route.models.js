@@ -1,16 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-const coordinateSchema = new Schema({
-  lat: {
-    type: Number,
-    required: true
-  },
-  long: {
-    type: Number,
-    required: true
-  }
-});
-
 const routeSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -18,11 +7,11 @@ const routeSchema = new Schema({
     required: true
   },
   start: {
-    type: coordinateSchema,
+    type: [Number], // Coordenadas en formato [longitud, latitud]
     required: true
   },
   end: {
-    type: coordinateSchema,
+    type: [Number], // Coordenadas en formato [longitud, latitud]
     required: true
   },
   waypoints: [{
