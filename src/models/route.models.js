@@ -1,5 +1,16 @@
 import mongoose, { Schema } from "mongoose";
 
+const coordinateSchema = new Schema({
+  lat: {
+    type: Number,
+    required: true
+  },
+  long: {
+    type: Number,
+    required: true
+  }
+});
+
 const routeSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -7,11 +18,11 @@ const routeSchema = new Schema({
     required: true
   },
   start: {
-    type: String,
+    type: coordinateSchema,
     required: true
   },
   end: {
-    type: String,
+    type: coordinateSchema,
     required: true
   },
   waypoints: [{
@@ -20,8 +31,7 @@ const routeSchema = new Schema({
   }]
 }, {
   timestamps: true
-}
-);
+});
 
 const Route = mongoose.model('Route', routeSchema);
 
