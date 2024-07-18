@@ -6,7 +6,13 @@ import { uploadRestaurantImages, deleteCloudinaryPhoto } from '../config/cloudin
 
 export const createRestaurant = async (data) => {
   try {
-    const response = await Restaurant.create(data)
+    const response = await Restaurant.create({
+      ...data, 
+      location: {
+        type: 'Point',
+        coordinates: data.location  // [long, lat]
+      }
+    })
     return response
   }
   catch (error) {

@@ -26,6 +26,7 @@
     "nodemon": "^3.1.4",
     "openrouteservice-js": "^0.3.2",
     "qrcode": "^1.5.3",
+    "simplify-js": "^1.2.4",
     "speakeasy": "^2.0.0",
     "stripe": "^16.1.0",
     "swagger-jsdoc": "^6.2.8",

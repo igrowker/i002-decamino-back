@@ -7,16 +7,16 @@ const restaurantSchema = new Schema({
   },
   location: {
     type: {
-      lat: {
-        type: Number,
-        required: true
-      },
-      long: {
-        type: Number,
-        required: true
-      }
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+      required: true
     },
-    required: true
+    coordinates: {
+      type: [Number], // Coordenadas en formato [longitud, latitud]
+      index: '2dsphere',
+      required: true
+    }
   },
   photos: [{
     type: String
@@ -44,6 +44,8 @@ const restaurantSchema = new Schema({
   {
     timestamps: true
   });
+
+restaurantSchema.index({ location: '2dsphere' })
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
