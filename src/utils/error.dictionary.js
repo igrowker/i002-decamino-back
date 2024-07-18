@@ -35,9 +35,17 @@ const dictionary = {
     status: 404,
     message: "El restaurante no existe"
   },
+  waypointsNotFound: {
+    status: 404,
+    message: "Uno o más restaurantes no existen"
+  },
   reviewNotFound: {
     status: 404,
     message: "La reseña no existe"
+  },
+  routeNotFound: {
+    status: 404,
+    message: "La ruta no existe"
   },
   reservationNotFound: {
     status: 404,

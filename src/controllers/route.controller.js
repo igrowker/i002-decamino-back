@@ -1,5 +1,5 @@
 import * as routeServices from '../services/route.service.js'
-import { coordsSchema, routeSchema} from '../schemas/route.schema.js';
+import { coordsSchema, routeSchema } from '../schemas/route.schema.js';
 import CustomError from '../utils/custom.error.js'
 
 export const GETRoute = async (req, res, next) => {
@@ -30,6 +30,17 @@ export const GETRoute = async (req, res, next) => {
   }
 };
 
+export const GETUserRoutes = async (req, res, next) => {
+  const user = req.user.id
+  try {
+    const response = await routeServices.readUserRoutes(user)
+    return res.status(200).json(response)
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
 export const POSTRoute = async (req, res, next) => {
   const user = req.user.id
   const data = req.body
@@ -46,3 +57,14 @@ export const POSTRoute = async (req, res, next) => {
     next(error)
   }
 };
+
+export const DELETERoute = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const response = await routeServices.destroyRoute(id)
+    res.status(200).json(response)
+  }
+  catch (error) {
+    next(error)
+  }
+}

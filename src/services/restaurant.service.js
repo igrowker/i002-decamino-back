@@ -112,7 +112,6 @@ export const updateRestaurant = async (id, data) => {
 export const destroyRestaurant = async (id) => {
   try {
     const response = await Restaurant.findByIdAndDelete(id)
-
     return response;
   }
   catch (error) {
