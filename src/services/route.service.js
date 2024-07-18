@@ -55,9 +55,29 @@ export const readRouteAndRestaurants = async (start, end) => {
   }
 }
 
+export const readUserRoutes = async (id) => {
+  try {
+    const response = await Route.find({ user: id })
+    return response
+  }
+  catch (error) {
+    throw error
+  }
+}
+
 export const createRoute = async (data) => {
   try {
     const response = await Route.create(data)
+    return response
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const destroyRoute = async (id) => {
+  try {
+    const response = await Route.findByIdAndDelete(id)
     return response
   }
   catch (error) {
