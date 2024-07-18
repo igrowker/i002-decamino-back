@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as reservationController from '../controllers/reservation.controller.js'
-import { isMerchant, isTraveler, requireAuth, validateId, isReservationAuthor } from '../middlewares/auth.middleware.js'
+import { isMerchant, isTraveler, requireAuth, validateId, isReservationAuthor } from '../middlewares/auth.middlewares.js'
 
 const router = Router();
 

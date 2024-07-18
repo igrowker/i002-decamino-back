@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
-import { injectUser } from './middlewares/auth.middleware.js';
+import { injectUser } from './middlewares/auth.middlewares.js';
 import { setupSwagger } from './config/swagger.js'; 
 import testRoutes from './routes/test.routes.js';
 import userRoutes from './routes/user.routes.js';
