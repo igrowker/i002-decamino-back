@@ -24,7 +24,7 @@ export const POSTWebhook = async (req, res, next) => {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   }
   catch (error) {
-    console.error('Error constructing webhook event:', error);
+    console.error('Error en la verificación de la firma del webhook:', error.message);
     next(error)
   }
 
