@@ -51,6 +51,14 @@ const dictionary = {
     status: 404,
     message: "La reserva no existe"
   },
+  paymentNotFound: {
+    status: 404,
+    message: "El pago no existe"
+  },
+  itemNotFound: {
+    status: 404,
+    message: "El item que se intenta pagar no existe"
+  },
   alreadyReviewed: {
     status: 400,
     message: "Este usuario ya hizo una reseña de este restaurant"
