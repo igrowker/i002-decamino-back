@@ -16,6 +16,7 @@ export const POSTCheckoutSession = async (req, res, next) => {
 };
 
 export const POSTWebhook = async (req, res, next) => {
+  console.log("LLEGAAAAAAAAAA")
   const sig = req.headers['stripe-signature'];
   let event;
 
@@ -23,17 +24,15 @@ export const POSTWebhook = async (req, res, next) => {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
   }
   catch (error) {
-    console.log('Error en la verificación de la firma del webhook: ' + error.message);
     next(error)
   }
 
   try {
-    await handleWebhook(event);
+    await paymentService.handleWebhook(event);
     res.status(200).json({ received: true });
   }
   catch (error) {
-    console.log('Error en el manejo de webhook: ' + error.message);
-    res.status(500).send({ error: error.message });
+    next(error)
   }
 
 

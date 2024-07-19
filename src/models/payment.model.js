@@ -11,7 +11,7 @@ const paymentSchema = new mongoose.Schema({
     type: Number, required: true
   },
   createdAt: {
-    ype: Date, default: Date.now
+    type: Date, default: Date.now
   }
 });
 

@@ -26,6 +26,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const createCheckoutSession = async ({ id, price, type }) => {
   try {
     let item;
+
     if (type === 'reservation') {
       item = await Reservation.findById(id);
     } 
