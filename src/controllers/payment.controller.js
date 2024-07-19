@@ -3,27 +3,39 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export const createCheckoutSessionController = async (req, res) => {
-  const { reservationId, description, pricePerPerson, numberOfPeople } = req.body;
+export const POSTCheckoutSession = async (req, res, next) => {
+  const { id, price, type } = req.body;
 
   try {
-    const result = await paymentService.createCheckoutSession({ reservationId, description, pricePerPerson, numberOfPeople });
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const response = await paymentService.createCheckoutSession({ id, price, type });
+    res.status(200).json(response);
+  }
+  catch (error) {
+    next(error)
   }
 };
 
-export const handleWebhookController = async (req, res) => {
+export const POSTWebhook = async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.log(`⚠️ Error en la verificación de la firma del webhook.`, err.message);
-    return res.sendStatus(400);
   }
+  catch (error) {
+    console.log('Error en la verificación de la firma del webhook: ' + error.message);
+    next(error)
+  }
+
+  try {
+    await handleWebhook(event);
+    res.status(200).json({ received: true });
+  }
+  catch (error) {
+    console.log('Error en el manejo de webhook: ' + error.message);
+    res.status(500).send({ error: error.message });
+  }
+
 
   // switch (event.type) {
   //     case 'payment_intent.succeeded':
@@ -42,29 +54,28 @@ export const handleWebhookController = async (req, res) => {
   //         console.log(`Tipo de evento no controlado ${event.type}`);
   // }
 
-  try {
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        console.log("Entro en handlePaymentIntentSucceeded()");
-        await paymentService.handlePaymentIntentSucceeded(event.data.object);
-        break;
-      case 'checkout.session.completed':
-        console.log("Entro en handleCheckoutSessionCompleted()");
-        await paymentService.handleCheckoutSessionCompleted(event.data.object);
-        break;
-      case 'checkout.session.expired':
-        console.log("Entro en handleCheckoutSessionExpired()");
-        await paymentService.handleCheckoutSessionExpired(event.data.object);
-        break;
-      default:
-        console.log(`Tipo de evento no controlado ${event.type}`);
-    }
-  } catch (error) {
-    console.error(`Error handling event ${event.type}:`, error);
-    return res.sendStatus(500);
-  }
-
-  res.json({ received: true });
+  // try {
+  //   switch (event.type) {
+  //     case 'payment_intent.succeeded':
+  //       console.log("Entro en handlePaymentIntentSucceeded()");
+  //       await paymentService.handlePaymentIntentSucceeded(event.data.object);
+  //       break;
+  //     case 'checkout.session.completed':
+  //       console.log("Entro en handleCheckoutSessionCompleted()");
+  //       await paymentService.handleCheckoutSessionCompleted(event.data.object);
+  //       break;
+  //     case 'checkout.session.expired':
+  //       console.log("Entro en handleCheckoutSessionExpired()");
+  //       await paymentService.handleCheckoutSessionExpired(event.data.object);
+  //       break;
+  //     default:
+  //       console.log(`Tipo de evento no controlado ${event.type}`);
+  //   }
+  // }
+  // catch (error) {
+  //   console.error(`Error handling event ${event.type}:`, error);
+  //   next(error)
+  // }
 };
 
 export const GETPayments = async (req, res, next) => {
