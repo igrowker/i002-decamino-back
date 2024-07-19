@@ -24,6 +24,10 @@ const reservationSchema = new Schema({
     type: String,
     enum: ['pendiente', 'confirmada', 'cancelada'],
     required: true
+  },
+  paymentId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Payment'
   }
 },
   {
