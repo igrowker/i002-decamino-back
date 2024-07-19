@@ -32,7 +32,19 @@ export const POSTWebhook = async (req, res, next) => {
   const data = event.data.object;
 
   try {
-    if (type == 'checkout.session.completed') await paymentService.handleCheckoutSessionCompleted(data);
+    switch (type) {
+      case 'checkout.session.completed':
+        await paymentService.handleCheckoutSessionCompleted(data);
+        break;
+      case 'checkout.session.async_payment_failed':
+        await paymentService.handleCheckoutSessionFailed(data);
+        break;
+      case 'checkout.session.expired':
+        await paymentService.handleCheckoutSessionExpired(data);
+        break;
+      default:
+        console.log(`Tipo de evento no manejado: ${type}`);
+    }
   }
   catch (error) {
     console.error(`Error manejando el evento ${type}:`, error);
