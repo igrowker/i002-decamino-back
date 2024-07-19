@@ -35,13 +35,29 @@ const dictionary = {
     status: 404,
     message: "El restaurante no existe"
   },
+  waypointsNotFound: {
+    status: 404,
+    message: "Uno o más restaurantes no existen"
+  },
   reviewNotFound: {
     status: 404,
     message: "La reseña no existe"
   },
+  routeNotFound: {
+    status: 404,
+    message: "La ruta no existe"
+  },
   reservationNotFound: {
     status: 404,
     message: "La reserva no existe"
+  },
+  paymentNotFound: {
+    status: 404,
+    message: "El pago no existe"
+  },
+  itemNotFound: {
+    status: 404,
+    message: "El item que se intenta pagar no existe"
   },
   alreadyReviewed: {
     status: 400,

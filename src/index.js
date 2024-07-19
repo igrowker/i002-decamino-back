@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
-import { injectUser } from './middlewares/auth.middleware.js';
+import { injectUser } from './middlewares/auth.middlewares.js';
 import { setupSwagger } from './config/swagger.js'; 
 import testRoutes from './routes/test.routes.js';
 import userRoutes from './routes/user.routes.js';
@@ -13,6 +13,7 @@ import reviewRoutes from './routes/review.routes.js';
 import reservationRoutes from './routes/reservation.routes.js';
 import errorHandler from './middlewares/error.handler.middleware.js'
 import notFoundHandler from './middlewares/not.found.handler.js'
+import { POSTWebhook } from './controllers/payment.controller.js';
 
 // Declaración de la variable app para usar express
 const app = express()
@@ -24,7 +25,7 @@ const PORT = process.env.PORT || 8080
 setupSwagger(app);
 
 // Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }), paymentRoutes);
+app.post('/api/payment/webhook', express.raw({ type: 'application/json' }), POSTWebhook);
 
 // Se agregan estos dos métodos para que express pueda leer formularios y json
 app.use(express.urlencoded({ extended: true }))

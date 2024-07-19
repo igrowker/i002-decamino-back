@@ -6,7 +6,13 @@ import { uploadRestaurantImages, deleteCloudinaryPhoto } from '../config/cloudin
 
 export const createRestaurant = async (data) => {
   try {
-    const response = await Restaurant.create(data)
+    const response = await Restaurant.create({
+      ...data, 
+      location: {
+        type: 'Point',
+        coordinates: data.location  // [long, lat]
+      }
+    })
     return response
   }
   catch (error) {
@@ -106,7 +112,6 @@ export const updateRestaurant = async (id, data) => {
 export const destroyRestaurant = async (id) => {
   try {
     const response = await Restaurant.findByIdAndDelete(id)
-
     return response;
   }
   catch (error) {

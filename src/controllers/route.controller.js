@@ -1,18 +1,70 @@
-import { getRoute } from '../services/route.service.js';
+import * as routeServices from '../services/route.service.js'
+import { coordsSchema, routeSchema } from '../schemas/route.schema.js';
+import CustomError from '../utils/custom.error.js'
 
-export const getRouteController = async (req, res) => {
-    try {
-        const { start, end } = req.query;
-        if (!start || !end) {
-            return res.status(400).json({ error: 'Start and end coordinates are required' });
-        }
+export const GETRoute = async (req, res, next) => {
+  try {
+    const { start, end } = req.query
 
-        const startCoords = JSON.parse(start);
-        const endCoords = JSON.parse(end);
+    const { error, value } = coordsSchema.validate({ start, end });
 
-        const route = await getRoute(startCoords, endCoords);
-        res.json(route);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const { start: startCoords, end: endCoords } = value;
+
+    const route = await routeServices.readRouteAndRestaurants(startCoords, endCoords);
+
+    const routeSummary = {
+      distance: route.features[0].properties.segments[0].distance,
+      duration: route.features[0].properties.segments[0].duration,
+      start: route.features[0].geometry.coordinates[0],
+      end: route.features[0].geometry.coordinates.slice(-1)[0],
+      steps: route.features[0].properties.segments[0].steps,
+      restaurants: route.restaurants
+    };
+
+    res.status(200).json(routeSummary)
+  }
+  catch (error) {
+    next(error)
+  }
 };
+
+export const GETUserRoutes = async (req, res, next) => {
+  const user = req.user.id
+  try {
+    const response = await routeServices.readUserRoutes(user)
+    return res.status(200).json(response)
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const POSTRoute = async (req, res, next) => {
+  const user = req.user.id
+  const data = req.body
+  try {
+    const { error, value } = routeSchema.validate({ user, ...data });
+
+    if (error) return CustomError.new({ status: 400, message: error.details[0].message })
+
+    const response = await routeServices.createRoute(value)
+
+    res.status(200).json(response)
+  }
+  catch (error) {
+    next(error)
+  }
+};
+
+export const DELETERoute = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const response = await routeServices.destroyRoute(id)
+    res.status(200).json(response)
+  }
+  catch (error) {
+    next(error)
+  }
+}
