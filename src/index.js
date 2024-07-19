@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
-import bodyParser from 'body-parser';
 import { injectUser } from './middlewares/auth.middlewares.js';
 import { setupSwagger } from './config/swagger.js'; 
 import testRoutes from './routes/test.routes.js';
@@ -26,7 +25,7 @@ const PORT = process.env.PORT || 8080
 setupSwagger(app);
 
 // Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
-app.post('/api/payment/webhook', bodyParser.raw({ type: 'application/json' }), POSTWebhook);
+app.post('/api/payment/webhook', express.raw({ type: 'application/json' }), POSTWebhook);
 
 // Se agregan estos dos métodos para que express pueda leer formularios y json
 app.use(express.urlencoded({ extended: true }))
