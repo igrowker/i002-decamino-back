@@ -27,6 +27,10 @@ const userSchema = new Schema({
     enum: ['merchant', 'traveler'],
     required: true
   },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
   profileImg: {
     type: String,
     default: "https://res.cloudinary.com/dw7nvkjxx/image/upload/v1717541551/Empleos-Formosa/Profile-IMG/T10_ajkdtb.png"
