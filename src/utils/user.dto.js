@@ -5,6 +5,7 @@ export default class userDto {
     this.email = user.email
     this.twoFactorEnabled = user.twoFactorEnabled
     this.role = user.role
+    this.phoneNumber = user.phoneNumber
     this.profileImg = user.profileImg
     this.history = user.history
     this.role === 'traveler' ? this.favorites = user.favorites : null
