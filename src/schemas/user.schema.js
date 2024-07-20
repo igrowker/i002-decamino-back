@@ -21,10 +21,8 @@ export const registerSchema = Joi.object({
     'any.required': 'El rol es requerido',
     'any.only': 'El rol debe ser uno de los siguientes valores: merchant, traveler'
   }),
-  phoneNumber: Joi.string().pattern(/^[0-9]{8,16}$/).required().messages({
-    'string.pattern.base': 'El número de teléfono debe tener entre 8 y 16 dígitos y solo contener números',
-    'string.empty': 'El número de teléfono es requerido',
-    'any.required': 'El número de teléfono es requerido'
+  phoneNumber: Joi.string().pattern(/^[0-9]{8,18}$/).optional().messages({
+    'string.pattern.base': 'El número de teléfono debe tener entre 8 y 16 dígitos y solo contener números'
   }),
 });
 
