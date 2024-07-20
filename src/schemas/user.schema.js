@@ -20,7 +20,12 @@ export const registerSchema = Joi.object({
     'string.empty': 'El rol es requerido',
     'any.required': 'El rol es requerido',
     'any.only': 'El rol debe ser uno de los siguientes valores: merchant, traveler'
-  })
+  }),
+  phoneNumber: Joi.string().pattern(/^[0-9]{8,16}$/).required().messages({
+    'string.pattern.base': 'El número de teléfono debe tener entre 8 y 16 dígitos y solo contener números',
+    'string.empty': 'El número de teléfono es requerido',
+    'any.required': 'El número de teléfono es requerido'
+  }),
 });
 
 export const loginSchema = Joi.object({
@@ -41,7 +46,10 @@ export const updateSchema = Joi.object({
   }),
   email: Joi.string().email().optional().messages({
     'string.email': 'Debe proporcionar un correo electrónico válido',
+  }),
+  phoneNumber: Joi.string().pattern(/^[0-9]{8,18}$/).optional().messages({
+    'string.pattern.base': 'El número de teléfono debe tener entre 8 y 16 dígitos y solo contener números'
   })
-}).or('username', 'email').messages({
-  'object.missing': 'Debe proporcionar al menos un parámetro: username o email'
+}).or('username', 'email', 'phoneNumber').messages({
+  'object.missing': 'Debe proporcionar al menos un parámetro: username, email o phoneNumber'
 });
