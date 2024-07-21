@@ -101,3 +101,27 @@ export const PUTUser = async (req, res, next) => {
     next(error)
   }
 }
+
+export const POSTFavorite = async (req, res, next) => {
+  const { id } = req.user
+  const restaurant = req.params.id
+  try {
+    const response = await userServices.addFavoriteRestaurant(id, restaurant)
+    return res.status(200).json({ response: new UserDto(response) });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const DELETEFavorite = async (req, res, next) => {
+  const { id } = req.user
+  const restaurant = req.params.id
+  try {
+    const response = await userServices.removeFavoriteRestaurant(id, restaurant)
+    return res.status(200).json({ response: new UserDto(response) });
+  }
+  catch (error) {
+    next(error)
+  }
+}
