@@ -8,7 +8,7 @@ const router = Router();
 router.post('/register', userController.POSTUserRegister)
   .post('/login', userController.POSTUserLogin)
   .post('/2fa/setup', requireAuth, userController.POST2faSetup)
-  .post('/profile-img/upload', requireAuth, upload.single('profileImg'), userController.POSTProfileImg)
+  .put('/profile-img/upload', requireAuth, upload.single('profileImg'), userController.PUTProfileImg)
   .get('/profile', requireAuth, userController.GETUser)
   .put('/profile', requireAuth, userController.PUTUser)
 

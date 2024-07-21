@@ -55,7 +55,7 @@ export const POST2faSetup = async (req, res, next) => {
   }
 }
 
-export const POSTProfileImg = async (req, res, next) => {
+export const PUTProfileImg = async (req, res, next) => {
   const { id } = req.user
 
   try {
