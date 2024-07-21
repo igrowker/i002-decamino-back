@@ -63,6 +63,14 @@ const dictionary = {
     status: 400,
     message: "Este usuario ya hizo una reseña de este restaurant"
   },
+  alreadyInFavorites: {
+    status: 400,
+    message: "Este restaurant ya existe en los favoritos del usuario"
+  },
+  notInFavorites: {
+    status: 400,
+    message: "Este restaurant no existe en los favoritos del usuario"
+  },
   invalidId: {
     status: 400,
     message: "El ID proporcionado no es válido"

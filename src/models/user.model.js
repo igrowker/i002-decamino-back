@@ -41,11 +41,11 @@ const userSchema = new Schema({
   }],
   favorites: [{
     type: Schema.Types.ObjectId,
-    ref: 'restaurant'
+    ref: 'Restaurant'
   }],
   restaurant: {
     type: Schema.Types.ObjectId,
-    ref: 'restaurant'
+    ref: 'Restaurant'
   }
 },
   {

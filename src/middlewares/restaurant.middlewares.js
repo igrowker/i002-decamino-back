@@ -34,3 +34,17 @@ export const waypointsExist = async (req, res, next) => {
     next(error)
   }
 }
+
+export const restaurantExist = async (req, res, next) => {
+  const { id } = req.params
+  try {
+    const restaurant = await Restaurant.findById(id);
+
+    if (!restaurant) return CustomError.new(dictionary.restaurantNotFound)
+
+    next();
+  }
+  catch (error) {
+    next(error)
+  }
+}
