@@ -36,6 +36,10 @@ export const createSchema = Joi.object({
   ).messages({
     'object.base': 'El horario debe ser un objeto con días de la semana como claves y horarios como valores'
   }),
+  reservationPrice: Joi.number().required().messages({
+    'number.base': 'El precio de la reserva por persona debe ser un número',
+    'any.required': 'El precio de la reserva por persona es requerido'
+  }),
   dineIn: Joi.boolean().default(true).messages({
     'boolean.base': 'El valor de dineIn debe ser booleano'
   }),
@@ -77,6 +81,9 @@ export const updateSchema = Joi.object({
     })
   ).messages({
     'object.base': 'El horario debe ser un objeto con días de la semana como claves y horarios como valores'
+  }),
+  reservationPrice: Joi.number().messages({
+    'number.base': 'El precio de la reserva por persona debe ser un número'
   }),
   dineIn: Joi.boolean().messages({
     'boolean.base': 'El valor de dineIn debe ser booleano'
