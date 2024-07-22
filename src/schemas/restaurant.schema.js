@@ -16,9 +16,6 @@ export const createSchema = Joi.object({
     }
     return value;
   }),
-  photos: Joi.array().items(Joi.string()).messages({
-    'array.base': 'Las fotos deben ser una lista de URLs'
-  }),
   description: Joi.string().required().messages({
     'string.empty': 'La descripción del restaurante es requerida',
     'any.required': 'La descripción del restaurante es requerida'
@@ -62,9 +59,6 @@ export const updateSchema = Joi.object({
       return helpers.message('La longitud y la latitud deben ser números');
     }
     return value;
-  }),
-  photos: Joi.array().items(Joi.string()).messages({
-    'array.base': 'Las fotos deben ser una lista de URLs'
   }),
   description: Joi.string().messages({
     'string.empty': 'La descripción del restaurante no puede estar vacía'
