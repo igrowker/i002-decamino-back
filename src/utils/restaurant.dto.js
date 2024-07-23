@@ -1,8 +1,8 @@
 export default class RestaurantDTO {
   constructor(restaurant) {
-    this.id = restaurant.id
+    this.id = restaurant._id
     this.title = restaurant.title
-    this.location = [restaurant.location.long, restaurant.location.lat]
+    this.location = restaurant.location.coordinates
     this.photos = restaurant.photos
     this.description = restaurant.description
     this.cuisine = restaurant.cuisine

@@ -12,6 +12,7 @@ router.post('/register', userController.POSTUserRegister)
   .put('/profile-img/upload', requireAuth, upload.single('profileImg'), userController.PUTProfileImg)
   .get('/profile', requireAuth, userController.GETUser)
   .put('/profile', requireAuth, userController.PUTUser)
+  .delete('/destroy', requireAuth, userController.DELETEUser)
   .post('/favorites/:id', requireAuth, isTraveler, validateId, restaurantExist, userController.POSTFavorite)
   .delete('/favorites/:id', requireAuth, isTraveler, validateId, restaurantExist, userController.DELETEFavorite)
 

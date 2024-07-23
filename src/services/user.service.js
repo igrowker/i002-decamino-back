@@ -4,6 +4,7 @@ import User from '../models/user.model.js';
 import CustomError from '../utils/custom.error.js';
 import dictionary from '../utils/error.dictionary.js'
 import { uploadProfileImage } from '../config/cloudinary.js';
+import Restaurant from '../models/restaurant.model.js';
 
 export const registerUser = async (data) => {
   try {
@@ -135,9 +136,9 @@ export const destroyUser = async (id) => {
       return CustomError.new(dictionary.userNotFound)
     }
 
-    
+    if (user.restaurant) await Restaurant.findByIdAndDelete(user.restaurant)
 
-    const response = await User.findByIdAndUpdate(id, data, { new: true })
+    const response = await User.findByIdAndDelete(id)
 
     return response
   }

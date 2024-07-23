@@ -17,7 +17,7 @@ export const POSTRestaurant = async (req, res, next) => {
 
     const restaurant = await restaurantServices.createRestaurant(value);
 
-    await userServices.updateUser(req.user.id, { restaurant: response.id })
+    await userServices.updateUser(req.user.id, { restaurant: restaurant.id })
 
     const response = new RestaurantDTO(restaurant)
 
@@ -116,13 +116,11 @@ export const PUTRestaurant = async (req, res, next) => {
 export const DELETERestaurant = async (req, res, next) => {
   const restaurantId = req.user.restaurant
   try {
-    const restaurant = await restaurantServices.destroyRestaurant(restaurantId)
+    await restaurantServices.destroyRestaurant(restaurantId)
 
     await userServices.updateUser(req.user.id, { restaurant: null })
 
-    const response = new RestaurantDTO(restaurant)
-
-    return res.status(200).json(response);
+    return res.status(200).json({ response: `Restaurante ${restaurantId} eliminado` });
   }
   catch (error) {
     next(error)

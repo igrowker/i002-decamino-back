@@ -102,6 +102,17 @@ export const PUTUser = async (req, res, next) => {
   }
 }
 
+export const DELETEUser = async (req, res, next) => {
+  const { id } = req.user
+  try {
+    await userServices.destroyUser(id)
+    return res.status(200).json({ response: `Usuario ${id} eliminado` });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
 export const POSTFavorite = async (req, res, next) => {
   const { id } = req.user
   const restaurant = req.params.id
