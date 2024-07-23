@@ -2,6 +2,7 @@ import { updateSchema, createSchema } from '../schemas/restaurant.schema.js';
 import * as restaurantServices from '../services/restaurant.service.js'
 import * as userServices from '../services/user.service.js'
 import fs from 'fs'
+import RestaurantDTO from '../utils/restaurant.dto.js';
 import CustomError from '../utils/custom.error.js'
 import dictionary from '../utils/error.dictionary.js';
 
@@ -14,9 +15,11 @@ export const POSTRestaurant = async (req, res, next) => {
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await restaurantServices.createRestaurant(value);
+    const restaurant = await restaurantServices.createRestaurant(value);
 
     await userServices.updateUser(req.user.id, { restaurant: response.id })
+
+    const response = new RestaurantDTO(restaurant)
 
     return res.status(201).json(response);
   }
@@ -51,7 +54,9 @@ export const DELETERestaurantPhoto = async (req, res, next) => {
       return CustomError.new(dictionary.missingPhotoUrl)
     }
 
-    const response = await restaurantServices.removePhotoFromRestaurant(restaurantId, photoUrl);
+    const restaurant = await restaurantServices.removePhotoFromRestaurant(restaurantId, photoUrl);
+
+    const response = new RestaurantDTO(restaurant)
 
     return res.status(200).json({ message: 'Foto eliminada exitosamente', response });
   } 
@@ -63,7 +68,10 @@ export const DELETERestaurantPhoto = async (req, res, next) => {
 export const GETRestaurants = async (req, res, next) => {
   const { cuisine, limit, page } = req.query
   try {
-    const response = await restaurantServices.readRestaurants({ cuisine, limit, page });
+    const restaurants = await restaurantServices.readRestaurants({ cuisine, limit, page });
+
+    const response = restaurants.map(restaurant => new RestaurantDTO(restaurant))
+
     return res.status(200).json(response);
   }
   catch (error) {
@@ -74,7 +82,10 @@ export const GETRestaurants = async (req, res, next) => {
 export const GETRestaurantById = async (req, res, next) => {
   const { id } = req.params
   try {
-    const response = await restaurantServices.readRestaurantById(id)
+    const restaurant = await restaurantServices.readRestaurantById(id)
+
+    const response = new RestaurantDTO(restaurant)
+
     return res.status(200).json(response);
 
   }
@@ -90,7 +101,9 @@ export const PUTRestaurant = async (req, res, next) => {
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await restaurantServices.updateRestaurant(restaurantId, value);
+    const restaurant = await restaurantServices.updateRestaurant(restaurantId, value);
+
+    const response = new RestaurantDTO(restaurant)
 
     return res.status(200).json(response);
   }
@@ -103,9 +116,11 @@ export const PUTRestaurant = async (req, res, next) => {
 export const DELETERestaurant = async (req, res, next) => {
   const restaurantId = req.user.restaurant
   try {
-    const response = await restaurantServices.destroyRestaurant(restaurantId)
+    const restaurant = await restaurantServices.destroyRestaurant(restaurantId)
 
     await userServices.updateUser(req.user.id, { restaurant: null })
+
+    const response = new RestaurantDTO(restaurant)
 
     return res.status(200).json(response);
   }

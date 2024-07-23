@@ -16,9 +16,6 @@ export const createSchema = Joi.object({
     }
     return value;
   }),
-  photos: Joi.array().items(Joi.string()).messages({
-    'array.base': 'Las fotos deben ser una lista de URLs'
-  }),
   description: Joi.string().required().messages({
     'string.empty': 'La descripción del restaurante es requerida',
     'any.required': 'La descripción del restaurante es requerida'
@@ -35,6 +32,10 @@ export const createSchema = Joi.object({
     })
   ).messages({
     'object.base': 'El horario debe ser un objeto con días de la semana como claves y horarios como valores'
+  }),
+  reservationPrice: Joi.number().required().messages({
+    'number.base': 'El precio de la reserva por persona debe ser un número',
+    'any.required': 'El precio de la reserva por persona es requerido'
   }),
   dineIn: Joi.boolean().default(true).messages({
     'boolean.base': 'El valor de dineIn debe ser booleano'
@@ -59,9 +60,6 @@ export const updateSchema = Joi.object({
     }
     return value;
   }),
-  photos: Joi.array().items(Joi.string()).messages({
-    'array.base': 'Las fotos deben ser una lista de URLs'
-  }),
   description: Joi.string().messages({
     'string.empty': 'La descripción del restaurante no puede estar vacía'
   }),
@@ -77,6 +75,9 @@ export const updateSchema = Joi.object({
     })
   ).messages({
     'object.base': 'El horario debe ser un objeto con días de la semana como claves y horarios como valores'
+  }),
+  reservationPrice: Joi.number().messages({
+    'number.base': 'El precio de la reserva por persona debe ser un número'
   }),
   dineIn: Joi.boolean().messages({
     'boolean.base': 'El valor de dineIn debe ser booleano'

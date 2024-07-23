@@ -32,6 +32,10 @@ const restaurantSchema = new Schema({
     type: Map,
     of: String
   },
+  reservationPrice: {
+    type: Number,
+    required: true
+  },
   dineIn: {
     type: Boolean,
     default: true
