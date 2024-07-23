@@ -28,9 +28,12 @@
     "qrcode": "^1.5.3",
     "simplify-js": "^1.2.4",
     "speakeasy": "^2.0.0",
-    "stripe": "^16.1.0",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "stripe": "^16.1.0"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.0",
+    "supertest": "^7.0.0"
+  }
 }

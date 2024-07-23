@@ -127,6 +127,25 @@ export const updateUser = async (id, data) => {
   }
 }
 
+export const destroyUser = async (id) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    
+
+    const response = await User.findByIdAndUpdate(id, data, { new: true })
+
+    return response
+  }
+  catch (error) {
+    throw error
+  }
+}
+
 export const addFavoriteRestaurant = async (userId, restaurantId) => {
   try {
     const user = await User.findById(userId);
