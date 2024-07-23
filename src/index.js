@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import connection from './config/db.connection.js';
 import { injectUser } from './middlewares/auth.middlewares.js';
-import { setupSwagger } from './config/swagger.js'; 
 import testRoutes from './routes/test.routes.js';
 import userRoutes from './routes/user.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
@@ -20,9 +19,6 @@ const app = express()
 
 // Declaración del puerto que se va a utilizar
 const PORT = process.env.PORT || 8080
-
-// Adición de Swagger para documentación
-setupSwagger(app);
 
 // Ruta de webhook antes de body-parser debe estar aca, mas abajo no funciona
 app.post('/api/payment/webhook', express.raw({ type: 'application/json' }), POSTWebhook);
