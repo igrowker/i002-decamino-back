@@ -58,6 +58,27 @@ describe("Testeando un flujo de operaciones para Users...", () => {
     expect(body.response.phoneNumber).to.be.equals("1122334455")
   })
 
+  it("Debería agregar un restaurante a favoritos", async () => {
+    const response = await requester.post('/user/favorites/669c42a6fdd4ca72f282d5dc').set('Authorization', token)
+    const { statusCode, body } = response
+    expect(statusCode).to.be.equals(200)
+    expect(body.response.favorites).to.be.an('array').that.includes('669c42a6fdd4ca72f282d5dc');
+  })
+
+  it("Debería eliminar un restaurante de favoritos", async () => {
+    const response = await requester.delete('/user/favorites/669c42a6fdd4ca72f282d5dc').set('Authorization', token)
+    const { statusCode, body } = response
+    expect(statusCode).to.be.equals(200)
+    expect(body.response.favorites).to.be.an('array').that.is.empty
+  })
+
+  it("Debería cambiar la foto de perfil", async () => {
+    const response = await requester.put('/user/profile-img/upload').set('Authorization', token).attach('profileImg', './test/images/photo1.jpg')
+    const { statusCode, body } = response
+    expect(statusCode).to.be.equals(200)
+    expect(body.message).to.be.equals('Imagen subida exitosamente')
+  })
+
   it("Debería eliminar al usuario", async () => {
     const response = await requester.delete('/user/destroy').set('Authorization', token)
     const { body, statusCode } = response
