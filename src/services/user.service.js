@@ -3,7 +3,8 @@ import qrcode from 'qrcode'
 import User from '../models/user.model.js';
 import CustomError from '../utils/custom.error.js';
 import dictionary from '../utils/error.dictionary.js'
-import cloudinary, { uploadProfileImage } from '../config/cloudinary.js';
+import { uploadProfileImage } from '../config/cloudinary.js';
+import Restaurant from '../models/restaurant.model.js';
 
 export const registerUser = async (data) => {
   try {
@@ -122,6 +123,57 @@ export const updateUser = async (id, data) => {
     const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
 
     return updatedUser
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const destroyUser = async (id) => {
+  try {
+    const user = await User.findById(id)
+
+    if (!user) {
+      return CustomError.new(dictionary.userNotFound)
+    }
+
+    if (user.restaurant) await Restaurant.findByIdAndDelete(user.restaurant)
+
+    const response = await User.findByIdAndDelete(id)
+
+    return response
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const addFavoriteRestaurant = async (userId, restaurantId) => {
+  try {
+    const user = await User.findById(userId);
+
+    if (user.favorites.includes(restaurantId)) return CustomError.new(dictionary.alreadyInFavorites)
+
+    user.favorites.push(restaurantId);
+    await user.save();
+    return user;
+  }
+  catch (error) {
+    throw error
+  }
+}
+
+export const removeFavoriteRestaurant = async (userId, restaurantId) => {
+  try {
+    const user = await User.findById(userId);
+
+    const index = user.favorites.indexOf(restaurantId);
+
+    if (index === -1) return CustomError.new(dictionary.notInFavorites)
+
+    user.favorites.splice(index, 1);
+    await user.save();
+    return user;
   }
   catch (error) {
     throw error

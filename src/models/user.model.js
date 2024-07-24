@@ -27,6 +27,9 @@ const userSchema = new Schema({
     enum: ['merchant', 'traveler'],
     required: true
   },
+  phoneNumber: {
+    type: String
+  },
   profileImg: {
     type: String,
     default: "https://res.cloudinary.com/dw7nvkjxx/image/upload/v1717541551/Empleos-Formosa/Profile-IMG/T10_ajkdtb.png"
@@ -38,11 +41,11 @@ const userSchema = new Schema({
   }],
   favorites: [{
     type: Schema.Types.ObjectId,
-    ref: 'restaurant'
+    ref: 'Restaurant'
   }],
   restaurant: {
     type: Schema.Types.ObjectId,
-    ref: 'restaurant'
+    ref: 'Restaurant'
   }
 },
   {

@@ -1,7 +1,7 @@
 import * as userServices from '../services/user.service.js'
 import { generateToken } from '../utils/jwt.js';
 import { registerSchema, loginSchema, updateSchema } from '../schemas/user.schema.js'
-import UserDto from '../utils/user.dto.js'
+import UserDTO from '../utils/user.dto.js'
 import CustomError from '../utils/custom.error.js';
 import fs from 'fs'
 import dictionary from '../utils/error.dictionary.js';
@@ -32,7 +32,7 @@ export const POSTUserLogin = async (req, res, next) => {
 
     const user = await userServices.loginUser(email, password)
 
-    const userData = new UserDto(user);
+    const userData = new UserDTO(user);
 
     const token = generateToken({ ...userData })
 
@@ -55,7 +55,7 @@ export const POST2faSetup = async (req, res, next) => {
   }
 }
 
-export const POSTProfileImg = async (req, res, next) => {
+export const PUTProfileImg = async (req, res, next) => {
   const { id } = req.user
 
   try {
@@ -78,7 +78,7 @@ export const GETUser = async (req, res, next) => {
   const { id } = req.user
   try {
     const user = await userServices.readUser(id)
-    return res.status(200).json({ response: new UserDto(user) });
+    return res.status(200).json({ response: new UserDTO(user) });
   }
   catch (error) {
     next(error)
@@ -95,7 +95,42 @@ export const PUTUser = async (req, res, next) => {
 
     const response = await userServices.updateUser(id, value)
 
-    return res.status(200).json({ response: new UserDto(response) });
+    return res.status(200).json({ response: new UserDTO(response) });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const DELETEUser = async (req, res, next) => {
+  const { id } = req.user
+  try {
+    await userServices.destroyUser(id)
+    return res.status(200).json({ response: `Usuario ${id} eliminado` });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const POSTFavorite = async (req, res, next) => {
+  const { id } = req.user
+  const restaurant = req.params.id
+  try {
+    const response = await userServices.addFavoriteRestaurant(id, restaurant)
+    return res.status(200).json({ response: new UserDTO(response) });
+  }
+  catch (error) {
+    next(error)
+  }
+}
+
+export const DELETEFavorite = async (req, res, next) => {
+  const { id } = req.user
+  const restaurant = req.params.id
+  try {
+    const response = await userServices.removeFavoriteRestaurant(id, restaurant)
+    return res.status(200).json({ response: new UserDTO(response) });
   }
   catch (error) {
     next(error)
