@@ -49,10 +49,9 @@ export const updateSchema = Joi.object({
   title: Joi.string().messages({
     'string.empty': 'El título del restaurante no puede estar vacío'
   }),
-  location: Joi.array().items(Joi.number()).length(2).required().messages({
+  location: Joi.array().items(Joi.number()).length(2).messages({
     'array.base': 'La ubicación debe ser un array de números',
-    'array.length': 'La ubicación debe contener exactamente dos números (longitud y latitud)',
-    'any.required': 'La ubicación del restaurante es requerida'
+    'array.length': 'La ubicación debe contener exactamente dos números (longitud y latitud)'
   }).custom((value, helpers) => {
     const [long, lat] = value;
     if (typeof long !== 'number' || typeof lat !== 'number') {
