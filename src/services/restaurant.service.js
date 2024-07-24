@@ -1,4 +1,6 @@
 import Restaurant from "../models/restaurant.model.js"
+import Review from "../models/review.model.js"
+import Reservation from "../models/reservation.model.js"
 import CustomError from "../utils/custom.error.js"
 import dictionary from "../utils/error.dictionary.js"
 import getRating from "../utils/get.rating.js"
@@ -121,6 +123,11 @@ export const updateRestaurant = async (id, data) => {
 export const destroyRestaurant = async (id) => {
   try {
     const response = await Restaurant.findByIdAndDelete(id)
+
+    // Eliminar todas las reservas y reviews asociadas
+    await Reservation.deleteMany({ restaurant: id });
+    await Review.deleteMany({ restaurant: id });
+
     return response;
   }
   catch (error) {
