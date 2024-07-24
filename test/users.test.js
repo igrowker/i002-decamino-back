@@ -72,6 +72,13 @@ describe("Testeando un flujo de operaciones para Users...", () => {
     expect(body.response.favorites).to.be.an('array').that.is.empty
   })
 
+  it("Debería cambiar la foto de perfil", async () => {
+    const response = await requester.put('/user/profile-img/upload').set('Authorization', token).attach('profileImg', './test/images/photo1.jpg')
+    const { statusCode, body } = response
+    expect(statusCode).to.be.equals(200)
+    expect(body.message).to.be.equals('Imagen subida exitosamente')
+  })
+
   it("Debería eliminar al usuario", async () => {
     const response = await requester.delete('/user/destroy').set('Authorization', token)
     const { body, statusCode } = response
