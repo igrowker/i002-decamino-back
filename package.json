@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "mocha test"
+    "test": "mocha test",
+    "test:payments": "mocha test/payment.test.js"
   },
   "keywords": [],
   "author": "Equipo de Igrowker",
