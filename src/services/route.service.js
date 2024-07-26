@@ -25,9 +25,9 @@ export const readRouteAndRestaurants = async (start, end) => {
     const simplifiedPoints = simplify(points, tolerance)
 
     // Convertir de nuevo a coordenadas
-    const simplifiedCoordinates = simplifiedPoints.map(point => [point.x, point.y]);
+    const simplifiedCoordinates = simplifiedPoints.map(point => [point.y, point.x]);
 
-    const bufferDistance = 2000  // Distancia en metros
+    const bufferDistance = 8000  // Distancia en metros
     const earthRadiusInMeters = 6378137  // Radianes de la Tierra}
     const bufferInRadians = bufferDistance / earthRadiusInMeters
 
