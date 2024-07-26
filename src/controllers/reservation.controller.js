@@ -40,7 +40,9 @@ export const GETUserReservations = async (req, res, next) => {
   try {
     const reservations = await reservationServices.readReservationsByUser(req.user.id);
 
-    const response = reservations.map(reservation => new ReservationDTO(reservation))
+    const response = reservations
+    .filter(reservation => reservation.restaurant !== null)
+    .map(reservation => new ReservationDTO(reservation));
 
     return res.status(200).json(response);
   }
