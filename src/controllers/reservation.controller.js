@@ -1,6 +1,7 @@
 import * as reservationServices from '../services/reservation.service.js'
 import { createSchema, updateSchema } from '../schemas/reservation.schema.js';
 import CustomError from '../utils/custom.error.js';
+import ReservationDTO from '../utils/reservation.dto.js';
 
 export const POSTReservation = async (req, res, next) => {
   const data = req.body
@@ -10,7 +11,9 @@ export const POSTReservation = async (req, res, next) => {
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await reservationServices.createReservation({ ...value, user: req.user.id });
+    const reservation = await reservationServices.createReservation({ ...value, user: req.user.id });
+
+    const response = new ReservationDTO(reservation)
 
     return res.status(201).json(response);
   }
@@ -22,7 +25,10 @@ export const POSTReservation = async (req, res, next) => {
 export const PUTReservationCancel = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const response = await reservationServices.updateReservation(id, { status: 'cancelada' });
+    const reservation = await reservationServices.updateReservation(id, { status: 'cancelada' });
+
+    const response = new ReservationDTO(reservation)
+
     return res.status(200).json(response);
   }
   catch (error) {
@@ -32,7 +38,10 @@ export const PUTReservationCancel = async (req, res, next) => {
 
 export const GETUserReservations = async (req, res, next) => {
   try {
-    const response = await reservationServices.readReservationsByUser(req.user.id);
+    const reservations = await reservationServices.readReservationsByUser(req.user.id);
+
+    const response = reservations.map(reservation => new ReservationDTO(reservation))
+
     return res.status(200).json(response);
   }
   catch (error) {
@@ -42,7 +51,10 @@ export const GETUserReservations = async (req, res, next) => {
 
 export const GETRestaurantReservations = async (req, res, next) => {
   try {
-    const response = await reservationServices.readReservationsByRestaurant(req.user.restaurant);
+    const reservations = await reservationServices.readReservationsByRestaurant(req.user.restaurant);
+
+    const response = reservations.map(reservation => new ReservationDTO(reservation))
+
     return res.status(200).json(response);
   }
   catch (error) {
@@ -57,7 +69,9 @@ export const PUTReservationStatus = async (req, res, next) => {
 
     if (error) return CustomError.new({ status: 400, message: error.details[0].message })
 
-    const response = await reservationServices.updateReservation(id, { status: value.status });
+    const reservation = await reservationServices.updateReservation(id, { status: value.status });
+
+    const response = new ReservationDTO(reservation)
 
     return res.status(200).json(response);
   }

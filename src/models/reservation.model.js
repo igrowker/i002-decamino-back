@@ -34,6 +34,17 @@ const reservationSchema = new Schema({
     timestamps: true
   });
 
+const populateRestaurant = function (next) {
+  this.populate('restaurant');
+  next();
+};
+
+reservationSchema.pre('find', populateRestaurant);
+reservationSchema.pre('findOne', populateRestaurant);
+reservationSchema.pre('findById', populateRestaurant);
+reservationSchema.pre('findOneAndUpdate', populateRestaurant);
+reservationSchema.pre('findByIdAndUpdate', populateRestaurant);
+
 // Crear el modelo de la reserva
 const Reservation = mongoose.model('Reservation', reservationSchema);
 
