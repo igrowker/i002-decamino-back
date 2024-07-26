@@ -102,13 +102,16 @@ export const readRestaurantById = async (id) => {
 
 export const updateRestaurant = async (id, data) => {
   try {
-    const response = await Restaurant.findByIdAndUpdate(id, {
-      ...data,
-      location: {
+    const updateData = { ...data };
+
+    if (data.location) {
+      updateData.location = {
         type: 'Point',
         coordinates: data.location  // [long, lat]
-      }
-    }, { new: true })
+      };
+    }
+
+    const response = await Restaurant.findByIdAndUpdate(id, updateData, { new: true })
 
     return response;
   }

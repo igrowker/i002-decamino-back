@@ -60,6 +60,15 @@ describe("Testeando un flujo de operaciones para Restaurants...", () => {
     expect(body.reservationPrice).to.be.equals(150)
   })
 
+  // it("Debería agregar fotos al restaurante", async () => {
+  //   const response = await requester.post('/restaurants/photos').set('Authorization', token)
+  //     .attach('photos', './test/images/photo1.jpg')
+  //     .attach('photos', './test/images/photo2.jpg')
+  //   const { statusCode, body } = response
+  //   expect(statusCode).to.be.equals(200)
+  //   expect(body.message).to.be.equals('Imágenes subidas exitosamente')
+  // })
+
   it("Debería eliminar el restaurante", async () => {
     const response = await requester.delete('/restaurants').set('Authorization', token)
     const { statusCode, body } = response
